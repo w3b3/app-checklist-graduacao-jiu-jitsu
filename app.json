@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "BJJ Checklist",
+    "slug": "bjj-checklist",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.brothersfight.bjjchecklist",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "buildNumber": "2"
+    },
+    "android": {
+      "package": "com.brothersfight.bjjchecklist",
+      "versionCode": 3
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7268852c-7783-485e-b623-d2c8ca352919"
+      }
+    }
+  }
+}
