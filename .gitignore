@@ -1,7 +1,15 @@
+# Credentials
 credentials.json
+
+# Node modules
 node_modules/
 .expo/
 dist/
+# Build directories
+build/
+# Build artifacts
+build-*
+
 npm-debug.*
 *.jks
 *.p8
