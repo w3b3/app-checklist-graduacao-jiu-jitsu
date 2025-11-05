@@ -7,6 +7,8 @@ node_modules/
 dist/
 # Build directories
 build/
+android/
+ios/
 # Build artifacts
 build-*
 

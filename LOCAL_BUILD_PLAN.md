@@ -76,8 +76,148 @@
 - Periodically clean Derived Data (`rm -rf ~/Library/Developer/Xcode/DerivedData/*`) if Xcode-related build issues appear.
 - Monitor build logs for warnings about deprecated Gradle plugins or iOS build settings and resolve them before they break future releases.
 
+## Troubleshooting: EAS Local Build Issues
+
+### Issue: Certificate Import Failures
+If `eas build --local` fails with certificate import errors to temporary keychain:
+
+**Workaround: Direct Xcode Build**
+
+1. **Import certificate to login keychain**
+   ```bash
+   security import credentials/ios/dist-cert.p12 \
+     -k ~/Library/Keychains/login.keychain-db \
+     -P "PASSWORD_FROM_CREDENTIALS_JSON" \
+     -T /usr/bin/codesign \
+     -T /usr/bin/security
+   ```
+
+2. **Install provisioning profile**
+   ```bash
+   # Get UUID from profile
+   PROFILE_UUID=$(security cms -D -i credentials/ios/profile.mobileprovision | \
+     grep -A 1 "UUID" | grep "string" | sed 's/.*<string>\(.*\)<\/string>.*/\1/')
+
+   # Copy to standard location
+   cp credentials/ios/profile.mobileprovision \
+     ~/Library/MobileDevice/Provisioning\ Profiles/${PROFILE_UUID}.mobileprovision
+   ```
+
+3. **Configure Xcode project for manual signing**
+
+   Edit `ios/BJJChecklist.xcodeproj/project.pbxproj` in the Release configuration:
+   ```xml
+   CODE_SIGN_IDENTITY = "iPhone Distribution";
+   CODE_SIGN_STYLE = Manual;
+   DEVELOPMENT_TEAM = YOUR_TEAM_ID;
+   PROVISIONING_PROFILE_SPECIFIER = "PROFILE_NAME_FROM_MOBILEPROVISION";
+   ```
+
+   Get team ID and profile name:
+   ```bash
+   # Team ID
+   security cms -D -i credentials/ios/profile.mobileprovision | \
+     grep -A 2 "TeamIdentifier" | grep "string"
+
+   # Profile name
+   security cms -D -i credentials/ios/profile.mobileprovision | \
+     grep -A 1 "<key>Name</key>" | grep "string"
+   ```
+
+4. **Ensure babel-preset-expo is installed**
+   ```bash
+   npm install --save-dev babel-preset-expo
+   ```
+
+5. **Build archive**
+   ```bash
+   xcodebuild -workspace ios/BJJChecklist.xcworkspace \
+     -scheme BJJChecklist \
+     -configuration Release \
+     -archivePath build/BJJChecklist.xcarchive \
+     archive
+   ```
+
+6. **Export to IPA**
+
+   Create `build/ExportOptions.plist`:
+   ```xml
+   <?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+   <plist version="1.0">
+   <dict>
+       <key>method</key>
+       <string>app-store</string>
+       <key>teamID</key>
+       <string>YOUR_TEAM_ID</string>
+       <key>provisioningProfiles</key>
+       <dict>
+           <key>com.yourapp.bundleid</key>
+           <string>PROFILE_NAME</string>
+       </dict>
+       <key>signingCertificate</key>
+       <string>iPhone Distribution</string>
+       <key>signingStyle</key>
+       <string>manual</string>
+       <key>uploadBitcode</key>
+       <false/>
+       <key>uploadSymbols</key>
+       <true/>
+   </dict>
+   </plist>
+   ```
+
+   Export:
+   ```bash
+   xcodebuild -exportArchive \
+     -archivePath build/BJJChecklist.xcarchive \
+     -exportOptionsPlist build/ExportOptions.plist \
+     -exportPath build/output
+   ```
+
+   IPA will be at: `build/output/BJJChecklist.ipa`
+
+## Expo SDK Upgrades
+
+### SDK 51 → 54 Migration Notes
+
+**Major version changes:**
+- React: 18.2.0 → 19.1.0
+- React Native: 0.74.5 → 0.81.5
+- TypeScript: 5.3.x → 5.9.x
+- Minimum iOS: 13+ → 15.1+
+- Minimum Xcode: 15.0 → 16.1+
+
+**Upgrade process:**
+```bash
+# 1. Upgrade Expo
+npm install expo@^54.0.0
+
+# 2. Update all dependencies
+npx expo install --fix
+
+# 3. Update dev dependencies
+npm install --save-dev @types/react@~19.1.10 typescript@~5.9.2 babel-preset-expo
+
+# 4. Run doctor
+npx expo-doctor
+
+# 5. Update iOS pods (if ios/ exists)
+npx pod-install
+
+# 6. Clean build
+rm -rf node_modules package-lock.json
+npm install
+```
+
+**Common issues:**
+- Missing `expo-font`: Required by `@expo/vector-icons` - install with `npx expo install expo-font`
+- TypeScript errors: Update parameter types to be explicit (e.g., `text?: string` instead of implicit `any`)
+- Prebuild conflict warning: Normal when `ios/` folder exists with app.json config - can ignore
+
 ## Next Steps
 1. Run a trial `eas build --platform ios --local` to confirm environment readiness.
-2. Follow with `eas submit --platform ios --local` using a sandbox build to validate the submission path.
-3. Repeat for Android, ensuring the Play Console service account works end-to-end.
-4. Update `PUBLISHING_GUIDE.md` with any project-specific deltas discovered during the dry runs.
+2. If EAS local build fails with certificate errors, use the Direct Xcode Build workaround above.
+3. Follow with `eas submit --platform ios --local` using a sandbox build to validate the submission path.
+4. Repeat for Android, ensuring the Play Console service account works end-to-end.
+5. Update `PUBLISHING_GUIDE.md` with any project-specific deltas discovered during the dry runs.

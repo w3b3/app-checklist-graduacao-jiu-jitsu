@@ -34,7 +34,7 @@ export const RequirementItem: React.FC<RequirementItemProps> = ({
         { text: 'Cancelar', style: 'cancel' },
         {
           text: 'Salvar',
-          onPress: (text) => {
+          onPress: (text?: string) => {
             if (onUpdateNote && text !== undefined) {
               onUpdateNote(text);
             }
@@ -54,7 +54,7 @@ export const RequirementItem: React.FC<RequirementItemProps> = ({
         { text: 'Cancelar', style: 'cancel' },
         {
           text: 'Salvar',
-          onPress: (text) => {
+          onPress: (text?: string) => {
             if (onUpdateUrl && text !== undefined) {
               onUpdateUrl(text);
             }

@@ -89,6 +89,16 @@ App.tsx (SafeAreaProvider)
 
 ### Key Implementation Details
 
+**Responsive Layout (Tablets):**
+- **Landscape mode:** Split-view with sidebar (belt selector) + main content
+- **Portrait mode:** Horizontal scrolling belt tabs
+- Uses multi-strategy orientation detection (see ORIENTATION_FIX.md):
+  1. `expo-screen-orientation` API (most reliable, especially on Android)
+  2. `Dimensions.get('screen')` fallback (not affected by system UI)
+  3. Aspect ratio check (> 1.2 for landscape)
+- Split-view threshold: 768px screen width (iPad Mini and up)
+- **Critical:** Uses `screen` dimensions, not `window` dimensions for threshold check on Android
+
 **Input handling:**
 - Uses native `Alert.prompt()` for notes and URLs (iOS only API, graceful degradation on Android)
 - No custom modals or bottom sheets in v1 for simplicity
@@ -108,6 +118,7 @@ App.tsx (SafeAreaProvider)
 **Performance:**
 - Uses `SectionList` for efficient rendering of grouped requirements
 - Category headers are sticky
+- Orientation listener properly cleaned up in useEffect
 
 ## Configuration Files
 

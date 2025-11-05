@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BJJ Checklist Icon Generator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        #canvas-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border: 1px solid #ddd;
+            display: block;
+        }
+        button {
+            margin-top: 20px;
+            padding: 12px 24px;
+            font-size: 16px;
+            background: #1E40AF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1E3A8A;
+        }
+        .instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <h1>BJJ Checklist Icon</h1>
+    <div id="canvas-container">
+        <canvas id="icon-canvas" width="1024" height="1024"></canvas>
+    </div>
+    <button onclick="downloadIcon()">Download icon.png (1024×1024)</button>
+
+    <div class="instructions">
+        <h3>Instructions:</h3>
+        <ol>
+            <li>Click the "Download icon.png" button above</li>
+            <li>Save the file as <code>icon.png</code> in the <code>assets</code> folder</li>
+            <li>Also save a copy as <code>adaptive-icon.png</code> for Android</li>
+        </ol>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('icon-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Create gradient background
+        const bgGradient = ctx.createLinearGradient(0, 0, 1024, 1024);
+        bgGradient.addColorStop(0, '#1E40AF');
+        bgGradient.addColorStop(1, '#1E3A8A');
+
+        // Draw rounded rectangle background
+        function roundRect(x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        // Background
+        roundRect(0, 0, 1024, 1024, 180);
+        ctx.fillStyle = bgGradient;
+        ctx.fill();
+
+        // Belt gradient
+        const beltGradient = ctx.createLinearGradient(162, 512, 862, 512);
+        beltGradient.addColorStop(0, '#1E40AF');    // Blue
+        beltGradient.addColorStop(0.25, '#7C3AED'); // Purple
+        beltGradient.addColorStop(0.5, '#92400E');  // Brown
+        beltGradient.addColorStop(0.75, '#1F2937'); // Black
+        beltGradient.addColorStop(1, '#1E40AF');    // Blue
+
+        // Belt shape
+        roundRect(162, 462, 700, 100, 20);
+        ctx.fillStyle = beltGradient;
+        ctx.fill();
+
+        // Belt knot (background circle)
+        ctx.beginPath();
+        ctx.arc(512, 512, 80, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(31, 41, 55, 0.9)';
+        ctx.fill();
+
+        // Belt knot (gradient circle)
+        ctx.beginPath();
+        ctx.arc(512, 512, 60, 0, Math.PI * 2);
+        ctx.fillStyle = beltGradient;
+        ctx.fill();
+
+        // BJJ text
+        ctx.font = 'bold 160px Arial, sans-serif';
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('BJJ', 512, 360);
+
+        // Checkmarks
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 12;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        // Check 1
+        ctx.beginPath();
+        ctx.moveTo(432, 680);
+        ctx.lineTo(447, 695);
+        ctx.lineTo(472, 670);
+        ctx.stroke();
+
+        // Check 2
+        ctx.beginPath();
+        ctx.moveTo(502, 680);
+        ctx.lineTo(517, 695);
+        ctx.lineTo(542, 670);
+        ctx.stroke();
+
+        // Check 3 (lighter)
+        ctx.globalAlpha = 0.6;
+        ctx.beginPath();
+        ctx.moveTo(572, 680);
+        ctx.lineTo(587, 695);
+        ctx.lineTo(612, 670);
+        ctx.stroke();
+        ctx.globalAlpha = 1.0;
+
+        function downloadIcon() {
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'icon.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                // Also prompt to save as adaptive-icon.png
+                setTimeout(() => {
+                    const a2 = document.createElement('a');
+                    a2.href = url;
+                    a2.download = 'adaptive-icon.png';
+                    document.body.appendChild(a2);
+                    a2.click();
+                    document.body.removeChild(a2);
+                }, 500);
+            }, 'image/png');
+        }
+    </script>
+</body>
+</html>

@@ -3,19 +3,27 @@
     "name": "BJJ Checklist",
     "slug": "bjj-checklist",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "plugins": [
+      "./plugins/withOrientation.js"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.brothersfight.bjjchecklist",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       },
-      "buildNumber": "9"
+      "buildNumber": "11"
     },
     "android": {
       "package": "com.brothersfight.bjjchecklist",
-      "versionCode": 4
+      "versionCode": 9,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1E40AF"
+      }
     },
     "extra": {
       "eas": {

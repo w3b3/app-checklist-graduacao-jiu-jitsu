@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BJJ Checklist Feature Graphic Generator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        #canvas-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border: 1px solid #ddd;
+            display: block;
+        }
+        button {
+            margin-top: 20px;
+            padding: 12px 24px;
+            font-size: 16px;
+            background: #1E40AF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1E3A8A;
+        }
+        .instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body>
+    <h1>BJJ Checklist Feature Graphic (1024×500)</h1>
+    <div id="canvas-container">
+        <canvas id="feature-canvas" width="1024" height="500"></canvas>
+    </div>
+    <button onclick="downloadFeatureGraphic()">Download Feature Graphic (1024×500)</button>
+
+    <div class="instructions">
+        <h3>Instructions:</h3>
+        <ol>
+            <li>Click the "Download Feature Graphic" button above</li>
+            <li>Upload to <strong>Google Play Console</strong> under Store listing → Feature graphic</li>
+            <li>Requirements: Must be PNG or JPEG, exactly 1024×500 pixels</li>
+        </ol>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('feature-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Create gradient background (matching icon style)
+        const bgGradient = ctx.createLinearGradient(0, 0, 1024, 500);
+        bgGradient.addColorStop(0, '#1E40AF');
+        bgGradient.addColorStop(1, '#1E3A8A');
+
+        // Fill background
+        ctx.fillStyle = bgGradient;
+        ctx.fillRect(0, 0, 1024, 500);
+
+        // BJJ text (left side)
+        ctx.font = 'bold 120px Arial, sans-serif';
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('BJJ', 80, 150);
+
+        // Subtitle
+        ctx.font = 'bold 36px Arial, sans-serif';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.fillText('Checklist', 80, 220);
+
+        // Tagline
+        ctx.font = '24px Arial, sans-serif';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.fillText('Track Your Belt Progression', 80, 270);
+
+        // Belt gradient (matching icon)
+        const beltGradient = ctx.createLinearGradient(80, 340, 944, 340);
+        beltGradient.addColorStop(0, '#1E40AF');    // Blue (Azul)
+        beltGradient.addColorStop(0.33, '#7C3AED'); // Purple (Roxa)
+        beltGradient.addColorStop(0.66, '#92400E'); // Brown (Marrom)
+        beltGradient.addColorStop(1, '#1F2937');    // Black (Preta)
+
+        // Draw belt shape
+        function roundRect(x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        // Belt
+        roundRect(80, 320, 864, 60, 15);
+        ctx.fillStyle = beltGradient;
+        ctx.fill();
+
+        // Belt labels
+        ctx.font = 'bold 16px Arial, sans-serif';
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        const beltLabels = [
+            { text: 'AZUL', x: 296 },
+            { text: 'ROXA', x: 512 },
+            { text: 'MARROM', x: 728 },
+            { text: 'PRETA', x: 890 }
+        ];
+
+        beltLabels.forEach(label => {
+            ctx.fillText(label.text, label.x, 350);
+        });
+
+        // Checkmarks on the belt
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 8;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        // Check 1 (Azul - completed)
+        ctx.globalAlpha = 1.0;
+        ctx.beginPath();
+        ctx.moveTo(170, 345);
+        ctx.lineTo(185, 360);
+        ctx.lineTo(210, 335);
+        ctx.stroke();
+
+        // Check 2 (Roxa - in progress)
+        ctx.globalAlpha = 0.7;
+        ctx.beginPath();
+        ctx.moveTo(386, 345);
+        ctx.lineTo(401, 360);
+        ctx.lineTo(426, 335);
+        ctx.stroke();
+
+        // Check 3 (Marrom - not started)
+        ctx.globalAlpha = 0.4;
+        ctx.beginPath();
+        ctx.moveTo(602, 345);
+        ctx.lineTo(617, 360);
+        ctx.lineTo(642, 335);
+        ctx.stroke();
+
+        // Check 4 (Preta - not started)
+        ctx.globalAlpha = 0.3;
+        ctx.beginPath();
+        ctx.moveTo(818, 345);
+        ctx.lineTo(833, 360);
+        ctx.lineTo(858, 335);
+        ctx.stroke();
+
+        ctx.globalAlpha = 1.0;
+
+        // Bottom tagline
+        ctx.font = '20px Arial, sans-serif';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+        ctx.textAlign = 'center';
+        ctx.fillText('100% Offline • Brothers Fight Academy', 512, 440);
+
+        function downloadFeatureGraphic() {
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'feature-graphic-1024x500.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 'image/png');
+        }
+    </script>
+</body>
+</html>
