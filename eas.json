@@ -20,6 +20,15 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "android": {
+        "track": "production"
+      },
+      "ios": {
+        "appleId": "ds@brzl.ca",
+        "ascAppId": "6754972177",
+        "appleTeamId": "Q39UF8B7S5"
+      }
+    }
   }
 }
