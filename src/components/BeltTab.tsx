@@ -23,7 +23,7 @@ export const BeltTab: React.FC<BeltTabProps> = ({ belt, isActive, progress = 0, 
       <Text
         style={[
           styles.label,
-          isActive ? { color: belt.textColor, fontWeight: '700' } : styles.inactiveLabel,
+          isActive ? { color: belt.textColor, fontWeight: '700', fontSize: 16 } : styles.inactiveLabel,
         ]}
       >
         {belt.displayName}
@@ -53,22 +53,23 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   inactiveLabel: {
-    color: '#6B7280',
+    color: '#4B5563',
     fontWeight: '600',
   },
   badge: {
     position: 'absolute',
     top: 4,
     right: 4,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
+    paddingHorizontal: 7,
+    paddingVertical: 3,
     borderRadius: 10,
-    minWidth: 32,
+    minWidth: 34,
     alignItems: 'center',
   },
   badgeText: {
     color: '#FFFFFF',
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: '700',
+    letterSpacing: 0.2,
   },
 });
