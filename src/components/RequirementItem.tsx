@@ -115,7 +115,7 @@ export const RequirementItem: React.FC<RequirementItemProps> = ({
           >
             <Ionicons
               name="information-circle-outline"
-              size={20}
+              size={24}
               color={isExpanded ? belt.color : '#9CA3AF'}
             />
           </TouchableOpacity>
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   },
   targetCount: {
     fontSize: 14,
-    color: '#6B7280',
+    color: '#4B5563',
     marginTop: 2,
   },
   infoContainer: {
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
   noteLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#6B7280',
+    color: '#4B5563',
     marginBottom: 4,
   },
   noteText: {
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   urlLabel: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#6B7280',
+    color: '#4B5563',
     marginBottom: 4,
   },
   urlText: {
