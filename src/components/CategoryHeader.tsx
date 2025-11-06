@@ -52,7 +52,7 @@ export const CategoryHeader: React.FC<CategoryHeaderProps> = ({
         <Ionicons
           name="chevron-down"
           size={20}
-          color="#6B7280"
+          color="#4B5563"
           style={[
             styles.chevron,
             isExpanded && styles.chevronExpanded,
