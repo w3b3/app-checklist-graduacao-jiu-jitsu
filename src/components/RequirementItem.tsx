@@ -1,9 +1,10 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Requirement, RequirementProgress } from '../types';
 import { BELT_COLORS } from '../data/belts';
+import { TextInputModal } from './TextInputModal';
 
 interface RequirementItemProps {
   requirement: Requirement;
@@ -25,45 +26,29 @@ export const RequirementItem: React.FC<RequirementItemProps> = ({
   onUpdateUrl,
 }) => {
   const belt = BELT_COLORS[requirement.belt];
+  const [noteModalVisible, setNoteModalVisible] = useState(false);
+  const [urlModalVisible, setUrlModalVisible] = useState(false);
 
   const handleNotePress = () => {
-    Alert.prompt(
-      progress.note ? 'Editar Nota' : 'Adicionar Nota',
-      'Digite uma nota para este requisito:',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Salvar',
-          onPress: (text?: string) => {
-            if (onUpdateNote && text !== undefined) {
-              onUpdateNote(text);
-            }
-          },
-        },
-      ],
-      'plain-text',
-      progress.note
-    );
+    setNoteModalVisible(true);
+  };
+
+  const handleNoteSave = (text: string) => {
+    if (onUpdateNote) {
+      onUpdateNote(text);
+    }
+    setNoteModalVisible(false);
   };
 
   const handleUrlPress = () => {
-    Alert.prompt(
-      progress.mediaUrl ? 'Editar Link' : 'Adicionar Link',
-      'Cole o link do vídeo ou recurso:',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Salvar',
-          onPress: (text?: string) => {
-            if (onUpdateUrl && text !== undefined) {
-              onUpdateUrl(text);
-            }
-          },
-        },
-      ],
-      'plain-text',
-      progress.mediaUrl
-    );
+    setUrlModalVisible(true);
+  };
+
+  const handleUrlSave = (text: string) => {
+    if (onUpdateUrl) {
+      onUpdateUrl(text);
+    }
+    setUrlModalVisible(false);
   };
 
   return (
@@ -153,6 +138,25 @@ export const RequirementItem: React.FC<RequirementItemProps> = ({
           </View>
         </View>
       )}
+
+      {/* Modals */}
+      <TextInputModal
+        visible={noteModalVisible}
+        title={progress.note ? 'Editar Nota' : 'Adicionar Nota'}
+        placeholder="Digite uma nota para este requisito..."
+        initialValue={progress.note}
+        onCancel={() => setNoteModalVisible(false)}
+        onSave={handleNoteSave}
+      />
+
+      <TextInputModal
+        visible={urlModalVisible}
+        title={progress.mediaUrl ? 'Editar Link' : 'Adicionar Link'}
+        placeholder="Cole o link do vídeo ou recurso..."
+        initialValue={progress.mediaUrl}
+        onCancel={() => setUrlModalVisible(false)}
+        onSave={handleUrlSave}
+      />
     </View>
   );
 };
