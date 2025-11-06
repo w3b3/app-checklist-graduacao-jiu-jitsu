@@ -256,12 +256,12 @@ export const HomeScreen: React.FC = () => {
       </View>
 
       {/* Belt Tabs */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.tabsContainer}
-        contentContainerStyle={[styles.tabsContent, { paddingHorizontal: phonePadding - 16 }]}
-      >
+      <View style={styles.tabsContainer}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={[styles.tabsContent, { paddingHorizontal: phonePadding - 16 }]}
+        >
         {BELT_ORDER.map((beltItem) => (
           <BeltTab
             key={beltItem.id}
@@ -271,7 +271,8 @@ export const HomeScreen: React.FC = () => {
             onPress={() => setSelectedBelt(beltItem.id)}
           />
         ))}
-      </ScrollView>
+        </ScrollView>
+      </View>
 
       {/* Progress Bar */}
       <ProgressBar
@@ -383,11 +384,11 @@ const styles = StyleSheet.create({
   tabsContainer: {
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
-    height: 60,
   },
   tabsContent: {
     paddingHorizontal: 4,
     height: 60,
+    alignItems: 'center',
   },
   listContent: {
     flexGrow: 1,
