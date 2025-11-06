@@ -383,10 +383,11 @@ const styles = StyleSheet.create({
   tabsContainer: {
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
-    maxHeight: 48,
+    height: 60,
   },
   tabsContent: {
     paddingHorizontal: 4,
+    height: 60,
   },
   listContent: {
     flexGrow: 1,
