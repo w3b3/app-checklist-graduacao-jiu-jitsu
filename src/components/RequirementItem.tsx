@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Requirement, RequirementProgress } from '../types';
 import { BELT_COLORS } from '../data/belts';
 import { TextInputModal } from './TextInputModal';
+import { selectPhotoSource, takePhoto, pickPhoto } from '../utils/photoUtils';
 
 interface RequirementItemProps {
   requirement: Requirement;
@@ -14,6 +15,8 @@ interface RequirementItemProps {
   isExpanded?: boolean;
   onUpdateNote?: (note: string) => void;
   onUpdateUrl?: (url: string) => void;
+  onUpdatePhoto?: (photoUri: string) => void;
+  onRemovePhoto?: () => void;
 }
 
 export const RequirementItem: React.FC<RequirementItemProps> = ({
@@ -24,6 +27,8 @@ export const RequirementItem: React.FC<RequirementItemProps> = ({
   isExpanded = false,
   onUpdateNote,
   onUpdateUrl,
+  onUpdatePhoto,
+  onRemovePhoto,
 }) => {
   const belt = BELT_COLORS[requirement.belt];
   const [noteModalVisible, setNoteModalVisible] = useState(false);
@@ -49,6 +54,42 @@ export const RequirementItem: React.FC<RequirementItemProps> = ({
       onUpdateUrl(text);
     }
     setUrlModalVisible(false);
+  };
+
+  const handlePhotoPress = async () => {
+    const source = await selectPhotoSource();
+    if (!source) return;
+
+    try {
+      const photoUri = source === 'camera' ? await takePhoto() : await pickPhoto();
+      if (photoUri && onUpdatePhoto) {
+        onUpdatePhoto(photoUri);
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível adicionar a foto.');
+      console.error('Error adding photo:', error);
+    }
+  };
+
+  const handlePhotoLongPress = () => {
+    if (!progress.photoUri) return;
+
+    Alert.alert(
+      'Remover Foto',
+      'Deseja remover esta foto?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Remover',
+          style: 'destructive',
+          onPress: () => {
+            if (onRemovePhoto) {
+              onRemovePhoto();
+            }
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -110,6 +151,22 @@ export const RequirementItem: React.FC<RequirementItemProps> = ({
       {/* Expanded State */}
       {isExpanded && (
         <View style={styles.expandedContainer}>
+          {progress.photoUri ? (
+            <TouchableOpacity
+              style={styles.photoContainer}
+              onLongPress={handlePhotoLongPress}
+              delayLongPress={500}
+              activeOpacity={0.9}
+            >
+              <Image
+                source={{ uri: progress.photoUri }}
+                style={styles.photo}
+                resizeMode="cover"
+              />
+              <Text style={styles.photoHint}>Pressione e segure para remover</Text>
+            </TouchableOpacity>
+          ) : null}
+
           {progress.note ? (
             <View style={styles.noteContainer}>
               <Text style={styles.noteLabel}>Nota:</Text>
@@ -125,6 +182,11 @@ export const RequirementItem: React.FC<RequirementItemProps> = ({
           ) : null}
 
           <View style={styles.actionsContainer}>
+            <TouchableOpacity style={styles.actionButton} onPress={handlePhotoPress}>
+              <Text style={styles.actionButtonText}>
+                {progress.photoUri ? '📷 Alterar foto' : '+ Adicionar foto'}
+              </Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton} onPress={handleNotePress}>
               <Text style={styles.actionButtonText}>
                 {progress.note ? 'Editar nota' : '+ Adicionar nota'}
@@ -220,6 +282,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
     borderTopWidth: 1,
     borderTopColor: '#E5E7EB',
+  },
+  photoContainer: {
+    marginBottom: 12,
+    borderRadius: 8,
+    overflow: 'hidden',
+    backgroundColor: '#E5E7EB',
+  },
+  photo: {
+    width: '100%',
+    height: 200,
+    backgroundColor: '#F3F4F6',
+  },
+  photoHint: {
+    fontSize: 11,
+    color: '#6B7280',
+    textAlign: 'center',
+    paddingVertical: 6,
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
   },
   noteContainer: {
     marginBottom: 8,

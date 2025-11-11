@@ -22,6 +22,7 @@ export interface RequirementProgress {
   completed: boolean;
   note: string;
   mediaUrl: string;
+  photoUri?: string; // Local file URI for photo
 }
 
 export interface BeltProgress {
