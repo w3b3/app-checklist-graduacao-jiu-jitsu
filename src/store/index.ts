@@ -1,32 +1,44 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { BeltId, BeltProgress, RequirementProgress } from '../types';
+import { BeltId, TechniqueProgress, BeltProgressSummary, RequirementProgress } from '../types';
+import { TECHNIQUES } from '../data/techniques';
+import { BELT_REQUIREMENTS } from '../data/beltRequirements';
 
 interface AppState {
   // Current selected belt
   selectedBelt: BeltId;
   setSelectedBelt: (belt: BeltId) => void;
 
-  // Progress data for all belts
+  // Progress data (technique-based, not belt-based)
   progress: {
-    [beltId: string]: BeltProgress;
+    [techniqueId: string]: TechniqueProgress;
   };
 
-  // Toggle requirement completion
-  toggleRequirement: (beltId: BeltId, requirementId: string) => void;
+  // Flag to track if user has seen the upgrade announcement
+  hasSeenUpgradeAnnouncement: boolean;
+  setHasSeenUpgradeAnnouncement: (seen: boolean) => void;
 
-  // Update requirement note
-  updateNote: (beltId: BeltId, requirementId: string, note: string) => void;
+  // Toggle technique completion
+  toggleTechnique: (techniqueId: string) => void;
 
-  // Update requirement media URL
-  updateMediaUrl: (beltId: BeltId, requirementId: string, mediaUrl: string) => void;
+  // Update technique note
+  updateNote: (techniqueId: string, note: string) => void;
 
-  // Get requirement progress
-  getRequirementProgress: (beltId: BeltId, requirementId: string) => RequirementProgress;
+  // Update technique media URL
+  updateMediaUrl: (techniqueId: string, mediaUrl: string) => void;
 
-  // Reset belt progress
-  resetBeltProgress: (beltId: BeltId) => void;
+  // Get technique progress
+  getTechniqueProgress: (techniqueId: string) => TechniqueProgress;
+
+  // Get all techniques for a belt
+  getTechniquesForBelt: (beltId: BeltId) => any[];
+
+  // Get progress summary for a belt
+  getProgressForBelt: (beltId: BeltId) => BeltProgressSummary;
+
+  // Reset ALL progress (all techniques across all belts)
+  resetAllProgress: () => void;
 
   // Expanded requirements (for accordion)
   expandedRequirements: Set<string>;
@@ -37,7 +49,8 @@ interface AppState {
   toggleCategory: (category: string) => void;
 }
 
-const defaultRequirementProgress: RequirementProgress = {
+const defaultTechniqueProgress: TechniqueProgress = {
+  techniqueId: '',
   completed: false,
   note: '',
   mediaUrl: '',
@@ -48,81 +61,115 @@ export const useStore = create<AppState>()(
     (set, get) => ({
       selectedBelt: 'azul',
       progress: {},
+      hasSeenUpgradeAnnouncement: false,
       expandedRequirements: new Set(),
       expandedCategories: new Set(['Quedas']), // First category expanded by default
 
       setSelectedBelt: (belt: BeltId) => set({ selectedBelt: belt }),
 
-      toggleRequirement: (beltId: BeltId, requirementId: string) => {
+      setHasSeenUpgradeAnnouncement: (seen: boolean) => set({ hasSeenUpgradeAnnouncement: seen }),
+
+      toggleTechnique: (techniqueId: string) => {
         const state = get();
-        const beltProgress = state.progress[beltId] || {};
-        const reqProgress = beltProgress[requirementId] || { ...defaultRequirementProgress };
+        const current = state.progress[techniqueId] || { ...defaultTechniqueProgress, techniqueId };
+        const newCompleted = !current.completed;
 
         set({
           progress: {
             ...state.progress,
-            [beltId]: {
-              ...beltProgress,
-              [requirementId]: {
-                ...reqProgress,
-                completed: !reqProgress.completed,
-              },
+            [techniqueId]: {
+              ...current,
+              completed: newCompleted,
+              completedAt: newCompleted ? new Date().toISOString() : undefined,
             },
           },
         });
       },
 
-      updateNote: (beltId: BeltId, requirementId: string, note: string) => {
+      updateNote: (techniqueId: string, note: string) => {
         const state = get();
-        const beltProgress = state.progress[beltId] || {};
-        const reqProgress = beltProgress[requirementId] || { ...defaultRequirementProgress };
+        const current = state.progress[techniqueId] || { ...defaultTechniqueProgress, techniqueId };
 
         set({
           progress: {
             ...state.progress,
-            [beltId]: {
-              ...beltProgress,
-              [requirementId]: {
-                ...reqProgress,
-                note,
-              },
+            [techniqueId]: {
+              ...current,
+              note,
             },
           },
         });
       },
 
-      updateMediaUrl: (beltId: BeltId, requirementId: string, mediaUrl: string) => {
+      updateMediaUrl: (techniqueId: string, mediaUrl: string) => {
         const state = get();
-        const beltProgress = state.progress[beltId] || {};
-        const reqProgress = beltProgress[requirementId] || { ...defaultRequirementProgress };
+        const current = state.progress[techniqueId] || { ...defaultTechniqueProgress, techniqueId };
 
         set({
           progress: {
             ...state.progress,
-            [beltId]: {
-              ...beltProgress,
-              [requirementId]: {
-                ...reqProgress,
-                mediaUrl,
-              },
+            [techniqueId]: {
+              ...current,
+              mediaUrl,
             },
           },
         });
       },
 
-      getRequirementProgress: (beltId: BeltId, requirementId: string) => {
+      getTechniqueProgress: (techniqueId: string) => {
         const state = get();
-        const beltProgress = state.progress[beltId] || {};
-        return beltProgress[requirementId] || { ...defaultRequirementProgress };
+        return state.progress[techniqueId] || { ...defaultTechniqueProgress, techniqueId };
       },
 
-      resetBeltProgress: (beltId: BeltId) => {
+      getTechniquesForBelt: (beltId: BeltId) => {
+        return TECHNIQUES.filter(tech =>
+          tech.countsToward.some(ct => ct.belt === beltId)
+        );
+      },
+
+      getProgressForBelt: (beltId: BeltId) => {
         const state = get();
+        const requirements = BELT_REQUIREMENTS.filter(req => req.belt === beltId);
+
+        const requirementProgress: RequirementProgress[] = requirements.map(req => {
+          // Find all techniques that count toward this requirement
+          const relevantTechniques = TECHNIQUES.filter(tech =>
+            tech.countsToward.some(ct => ct.requirementId === req.id)
+          );
+
+          // Count how many are completed
+          const completedCount = relevantTechniques.filter(tech =>
+            state.progress[tech.id]?.completed
+          ).length;
+
+          return {
+            requirementId: req.id,
+            requirementName: req.name,
+            category: req.category,
+            completed: completedCount,
+            total: req.targetCount,
+            isComplete: completedCount >= req.targetCount,
+            techniques: relevantTechniques,
+          };
+        });
+
+        const totalRequirements = requirementProgress.length;
+        const completedRequirements = requirementProgress.filter(r => r.isComplete).length;
+
+        return {
+          requirements: requirementProgress,
+          overallPercent: totalRequirements > 0
+            ? (completedRequirements / totalRequirements) * 100
+            : 0,
+          completedCount: completedRequirements,
+          totalCount: totalRequirements,
+        };
+      },
+
+      resetAllProgress: () => {
         set({
-          progress: {
-            ...state.progress,
-            [beltId]: {},
-          },
+          progress: {},
+          expandedRequirements: new Set(),
         });
       },
 
@@ -149,12 +196,13 @@ export const useStore = create<AppState>()(
       },
     }),
     {
-      name: 'bjj-checklist-storage',
+      name: 'bjj-checklist-storage-v2', // Changed key to force reset
       storage: createJSONStorage(() => AsyncStorage),
       // Custom serialization for Sets
       partialize: (state) => ({
         selectedBelt: state.selectedBelt,
         progress: state.progress,
+        hasSeenUpgradeAnnouncement: state.hasSeenUpgradeAnnouncement,
         expandedCategories: Array.from(state.expandedCategories),
       }),
       onRehydrateStorage: () => (state) => {

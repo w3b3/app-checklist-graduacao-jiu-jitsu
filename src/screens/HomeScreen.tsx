@@ -11,13 +11,14 @@ import { CategoryHeader } from '../components/CategoryHeader';
 import { RequirementItem } from '../components/RequirementItem';
 import { ResetBeltButton } from '../components/ResetBeltButton';
 import { CompletionScreen } from '../components/CompletionScreen';
+import { UpgradeAnnouncementModal } from '../components/UpgradeAnnouncementModal';
 import { BELT_ORDER, BELT_COLORS } from '../data/belts';
-import { getRequirementsByBelt, groupRequirementsByCategory } from '../data/requirements';
-import { Requirement } from '../types';
+import { getTechniquesByCategory } from '../data/techniques';
+import { Technique } from '../types';
 
 interface Section {
   title: string;
-  data: Requirement[];
+  data: Technique[];
 }
 
 export const HomeScreen: React.FC = () => {
@@ -27,16 +28,18 @@ export const HomeScreen: React.FC = () => {
   const {
     selectedBelt,
     setSelectedBelt,
-    progress,
-    toggleRequirement,
-    getRequirementProgress,
+    hasSeenUpgradeAnnouncement,
+    setHasSeenUpgradeAnnouncement,
+    toggleTechnique,
+    getTechniqueProgress,
+    getProgressForBelt,
     expandedCategories,
     toggleCategory,
     expandedRequirements,
     toggleExpanded,
     updateNote,
     updateMediaUrl,
-    resetBeltProgress,
+    resetAllProgress,
   } = useStore();
 
   const belt = BELT_COLORS[selectedBelt];
@@ -92,49 +95,46 @@ export const HomeScreen: React.FC = () => {
   // Increased padding for phones
   const phonePadding = 20;
 
-  const requirements = useMemo(() => getRequirementsByBelt(selectedBelt), [selectedBelt]);
+  // Get techniques grouped by category for current belt
+  const techniquesByCategory = useMemo(
+    () => getTechniquesByCategory(selectedBelt),
+    [selectedBelt]
+  );
 
   const sections: Section[] = useMemo(() => {
-    const grouped = groupRequirementsByCategory(requirements);
-    return Array.from(grouped.entries()).map(([category, reqs]) => ({
+    return Array.from(techniquesByCategory.entries()).map(([category, techniques]) => ({
       title: category,
-      data: reqs,
+      data: techniques,
     }));
-  }, [requirements]);
+  }, [techniquesByCategory]);
 
-  // Calculate progress
+  // Calculate progress using new store method
+  const beltProgress = useMemo(() => getProgressForBelt(selectedBelt), [selectedBelt, getProgressForBelt]);
+
   const { completed, total, percentage } = useMemo(() => {
-    const beltProgress = progress[selectedBelt] || {};
-    const completedCount = Object.values(beltProgress).filter(p => p.completed).length;
-    const totalCount = requirements.length;
-    const pct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
     return {
-      completed: completedCount,
-      total: totalCount,
-      percentage: pct,
+      completed: beltProgress.completedCount,
+      total: beltProgress.totalCount,
+      percentage: Math.round(beltProgress.overallPercent),
     };
-  }, [progress, selectedBelt, requirements]);
+  }, [beltProgress]);
 
   // Calculate progress for each category
   const getCategoryProgress = (category: string) => {
-    const beltProgress = progress[selectedBelt] || {};
-    const categoryReqs = requirements.filter(r => r.category === category);
-    const completedInCategory = categoryReqs.filter(
-      r => beltProgress[r.id]?.completed
+    const categoryTechniques = techniquesByCategory.get(category) || [];
+    const completedInCategory = categoryTechniques.filter(
+      tech => getTechniqueProgress(tech.id).completed
     ).length;
     return {
       completed: completedInCategory,
-      total: categoryReqs.length,
+      total: categoryTechniques.length,
     };
   };
 
   // Calculate belt tab progress for each belt
   const getBeltProgress = (beltId: string): number => {
-    const beltReqs = getRequirementsByBelt(beltId);
-    const beltProg = progress[beltId] || {};
-    const completedCount = Object.values(beltProg).filter(p => p.completed).length;
-    const totalCount = beltReqs.length;
-    return totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+    const progress = getProgressForBelt(beltId);
+    return Math.round(progress.overallPercent);
   };
 
   // Show completion screen if 100%
@@ -145,7 +145,7 @@ export const HomeScreen: React.FC = () => {
         <CompletionScreen beltId={selectedBelt} />
         <ResetBeltButton
           beltName={belt.displayName}
-          onReset={() => resetBeltProgress(selectedBelt)}
+          onReset={() => resetAllProgress()}
         />
       </SafeAreaView>
     );
@@ -156,6 +156,10 @@ export const HomeScreen: React.FC = () => {
     return (
       <View style={styles.container}>
         <StatusBar style="auto" />
+        <UpgradeAnnouncementModal
+          visible={!hasSeenUpgradeAnnouncement}
+          onClose={() => setHasSeenUpgradeAnnouncement(true)}
+        />
         <View style={styles.splitContainer}>
           {/* Left Sidebar */}
           <View style={styles.sidebar}>
@@ -211,18 +215,19 @@ export const HomeScreen: React.FC = () => {
                 const isExpanded = expandedCategories.has(section.title);
                 if (!isExpanded) return null;
 
-                const reqProgress = getRequirementProgress(selectedBelt, item.id);
+                const techProgress = getTechniqueProgress(item.id);
                 const isItemExpanded = expandedRequirements.has(item.id);
 
                 return (
                   <RequirementItem
-                    requirement={item}
-                    progress={reqProgress}
-                    onToggle={() => toggleRequirement(selectedBelt, item.id)}
+                    technique={item}
+                    progress={techProgress}
+                    currentBelt={selectedBelt}
+                    onToggle={() => toggleTechnique(item.id)}
                     onExpand={() => toggleExpanded(item.id)}
                     isExpanded={isItemExpanded}
-                    onUpdateNote={(note) => updateNote(selectedBelt, item.id, note)}
-                    onUpdateUrl={(url) => updateMediaUrl(selectedBelt, item.id, url)}
+                    onUpdateNote={(note) => updateNote(item.id, note)}
+                    onUpdateUrl={(url) => updateMediaUrl(item.id, url)}
                   />
                 );
               }}
@@ -233,8 +238,8 @@ export const HomeScreen: React.FC = () => {
               }
               ListFooterComponent={
                 <ResetBeltButton
-                  beltName={belt.displayName}
-                  onReset={() => resetBeltProgress(selectedBelt)}
+                  beltName="Todas as Faixas"
+                  onReset={() => resetAllProgress()}
                 />
               }
               contentContainerStyle={styles.listContent}
@@ -249,6 +254,10 @@ export const HomeScreen: React.FC = () => {
   return (
     <SafeAreaView edges={['top', 'bottom']} style={styles.container}>
       <StatusBar style="auto" />
+      <UpgradeAnnouncementModal
+        visible={!hasSeenUpgradeAnnouncement}
+        onClose={() => setHasSeenUpgradeAnnouncement(true)}
+      />
 
       {/* Header */}
       <View style={[styles.header, { paddingHorizontal: phonePadding }]}>
@@ -305,18 +314,19 @@ export const HomeScreen: React.FC = () => {
           const isExpanded = expandedCategories.has(section.title);
           if (!isExpanded) return null;
 
-          const reqProgress = getRequirementProgress(selectedBelt, item.id);
+          const techProgress = getTechniqueProgress(item.id);
           const isItemExpanded = expandedRequirements.has(item.id);
 
           return (
             <RequirementItem
-              requirement={item}
-              progress={reqProgress}
-              onToggle={() => toggleRequirement(selectedBelt, item.id)}
+              technique={item}
+              progress={techProgress}
+              currentBelt={selectedBelt}
+              onToggle={() => toggleTechnique(item.id)}
               onExpand={() => toggleExpanded(item.id)}
               isExpanded={isItemExpanded}
-              onUpdateNote={(note) => updateNote(selectedBelt, item.id, note)}
-              onUpdateUrl={(url) => updateMediaUrl(selectedBelt, item.id, url)}
+              onUpdateNote={(note) => updateNote(item.id, note)}
+              onUpdateUrl={(url) => updateMediaUrl(item.id, url)}
             />
           );
         }}
@@ -327,8 +337,8 @@ export const HomeScreen: React.FC = () => {
         }
         ListFooterComponent={
           <ResetBeltButton
-            beltName={belt.displayName}
-            onReset={() => resetBeltProgress(selectedBelt)}
+            beltName="Todas as Faixas"
+            onReset={() => resetAllProgress()}
           />
         }
         contentContainerStyle={styles.listContent}

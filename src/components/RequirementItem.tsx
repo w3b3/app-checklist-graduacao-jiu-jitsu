@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import { Requirement, RequirementProgress } from '../types';
+import { Technique, TechniqueProgress, BeltId } from '../types';
 import { BELT_COLORS } from '../data/belts';
 import { TextInputModal } from './TextInputModal';
 
 interface RequirementItemProps {
-  requirement: Requirement;
-  progress: RequirementProgress;
+  technique: Technique;
+  progress: TechniqueProgress;
+  currentBelt: BeltId;
   onToggle: () => void;
   onExpand?: () => void;
   isExpanded?: boolean;
@@ -17,15 +18,16 @@ interface RequirementItemProps {
 }
 
 export const RequirementItem: React.FC<RequirementItemProps> = ({
-  requirement,
+  technique,
   progress,
+  currentBelt,
   onToggle,
   onExpand,
   isExpanded = false,
   onUpdateNote,
   onUpdateUrl,
 }) => {
-  const belt = BELT_COLORS[requirement.belt];
+  const belt = BELT_COLORS[currentBelt];
   const [noteModalVisible, setNoteModalVisible] = useState(false);
   const [urlModalVisible, setUrlModalVisible] = useState(false);
 
@@ -49,6 +51,20 @@ export const RequirementItem: React.FC<RequirementItemProps> = ({
       onUpdateUrl(text);
     }
     setUrlModalVisible(false);
+  };
+
+  // Get belt badges (other belts this technique counts toward)
+  const otherBelts = technique.countsToward.filter(ct => ct.belt !== currentBelt);
+
+  // Belt emoji mapping
+  const getBeltEmoji = (beltId: BeltId): string => {
+    const emojiMap = {
+      azul: '🔵',
+      roxa: '🟣',
+      marrom: '🟤',
+      preta: '⚫',
+    };
+    return emojiMap[beltId];
   };
 
   return (
@@ -84,10 +100,23 @@ export const RequirementItem: React.FC<RequirementItemProps> = ({
             ]}
             numberOfLines={2}
           >
-            {requirement.name}
+            {technique.name}
           </Text>
-          {requirement.targetCount && (
-            <Text style={styles.targetCount}>{requirement.targetCount} técnicas</Text>
+          {technique.position && (
+            <Text style={styles.position}>de {technique.position}</Text>
+          )}
+          {/* Cross-belt badges */}
+          {otherBelts.length > 0 && (
+            <View style={styles.badgesContainer}>
+              <Text style={styles.badgesLabel}>Também conta para:</Text>
+              <View style={styles.badges}>
+                {otherBelts.map(ct => (
+                  <Text key={ct.belt} style={styles.badge}>
+                    {getBeltEmoji(ct.belt)}
+                  </Text>
+                ))}
+              </View>
+            </View>
           )}
         </View>
 
@@ -110,6 +139,27 @@ export const RequirementItem: React.FC<RequirementItemProps> = ({
       {/* Expanded State */}
       {isExpanded && (
         <View style={styles.expandedContainer}>
+          {/* Show all belt requirements this technique counts toward */}
+          <View style={styles.requirementsContainer}>
+            <Text style={styles.requirementsTitle}>Conta para os requisitos:</Text>
+            {technique.countsToward.map(ct => {
+              const beltColor = BELT_COLORS[ct.belt];
+              return (
+                <View key={`${ct.belt}-${ct.requirementId}`} style={styles.requirementRow}>
+                  <Text style={styles.requirementEmoji}>{getBeltEmoji(ct.belt)}</Text>
+                  <Text
+                    style={[
+                      styles.requirementText,
+                      ct.belt === currentBelt && { fontWeight: '700', color: beltColor.textColor }
+                    ]}
+                  >
+                    {BELT_COLORS[ct.belt].displayName}: {ct.requirementName}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+
           {progress.note ? (
             <View style={styles.noteContainer}>
               <Text style={styles.noteLabel}>Nota:</Text>
@@ -143,7 +193,7 @@ export const RequirementItem: React.FC<RequirementItemProps> = ({
       <TextInputModal
         visible={noteModalVisible}
         title={progress.note ? 'Editar Nota' : 'Adicionar Nota'}
-        placeholder="Digite uma nota para este requisito..."
+        placeholder="Digite uma nota para esta técnica..."
         initialValue={progress.note}
         onCancel={() => setNoteModalVisible(false)}
         onSave={handleNoteSave}
@@ -203,10 +253,28 @@ const styles = StyleSheet.create({
     textDecorationLine: 'line-through',
     opacity: 0.6,
   },
-  targetCount: {
+  position: {
     fontSize: 14,
-    color: '#4B5563',
+    color: '#6B7280',
     marginTop: 2,
+    fontStyle: 'italic',
+  },
+  badgesContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 6,
+    gap: 6,
+  },
+  badgesLabel: {
+    fontSize: 12,
+    color: '#9CA3AF',
+  },
+  badges: {
+    flexDirection: 'row',
+    gap: 4,
+  },
+  badge: {
+    fontSize: 16,
   },
   infoContainer: {
     width: 44,
@@ -220,6 +288,35 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
     borderTopWidth: 1,
     borderTopColor: '#E5E7EB',
+  },
+  requirementsContainer: {
+    backgroundColor: '#DBEAFE',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 12,
+  },
+  requirementsTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#1E40AF',
+    marginBottom: 8,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  requirementRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+    gap: 8,
+  },
+  requirementEmoji: {
+    fontSize: 14,
+  },
+  requirementText: {
+    fontSize: 13,
+    color: '#374151',
+    lineHeight: 18,
+    flex: 1,
   },
   noteContainer: {
     marginBottom: 8,
