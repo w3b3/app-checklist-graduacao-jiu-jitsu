@@ -36,6 +36,8 @@ export const HomeScreen: React.FC = () => {
     toggleExpanded,
     updateNote,
     updateMediaUrl,
+    updatePhoto,
+    removePhoto,
     resetBeltProgress,
   } = useStore();
 
@@ -223,6 +225,8 @@ export const HomeScreen: React.FC = () => {
                     isExpanded={isItemExpanded}
                     onUpdateNote={(note) => updateNote(selectedBelt, item.id, note)}
                     onUpdateUrl={(url) => updateMediaUrl(selectedBelt, item.id, url)}
+                    onUpdatePhoto={(photoUri) => updatePhoto(selectedBelt, item.id, photoUri)}
+                    onRemovePhoto={() => removePhoto(selectedBelt, item.id)}
                   />
                 );
               }}
@@ -317,6 +321,8 @@ export const HomeScreen: React.FC = () => {
               isExpanded={isItemExpanded}
               onUpdateNote={(note) => updateNote(selectedBelt, item.id, note)}
               onUpdateUrl={(url) => updateMediaUrl(selectedBelt, item.id, url)}
+              onUpdatePhoto={(photoUri) => updatePhoto(selectedBelt, item.id, photoUri)}
+              onRemovePhoto={() => removePhoto(selectedBelt, item.id)}
             />
           );
         }}

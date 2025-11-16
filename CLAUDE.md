@@ -36,6 +36,13 @@ eas build --platform android --profile production
 # Submit to stores
 eas submit --platform ios
 eas submit --platform android
+
+# Check build status
+eas build:list --limit 5
+
+# Check submission status (no CLI command available)
+# Visit: https://expo.dev/accounts/[username]/projects/[project-name]
+# Or check App Store Connect / Google Play Console directly
 ```
 
 ## Architecture
@@ -179,3 +186,4 @@ https://raw.githubusercontent.com/w3b3/app-checklist-graduacao-jiu-jitsu/main/PR
 - Photo/video capture
 - Push notifications
 - Detailed analytics
+- Remind me to update version in app.json before building a new version to be published. Version must increase for App Store/Play Store to accept updates
