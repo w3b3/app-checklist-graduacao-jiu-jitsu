@@ -2,7 +2,7 @@
   "expo": {
     "name": "BJJ Checklist",
     "slug": "bjj-checklist",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -15,11 +15,11 @@
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       },
-      "buildNumber": "12"
+      "buildNumber": "13"
     },
     "android": {
       "package": "com.brothersfight.bjjchecklist",
-      "versionCode": 10,
+      "versionCode": 14,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1E40AF"

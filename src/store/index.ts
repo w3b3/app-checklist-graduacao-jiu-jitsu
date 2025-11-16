@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as FileSystem from 'expo-file-system/legacy';
 import { BeltId, BeltProgress, RequirementProgress } from '../types';
 
 interface AppState {
@@ -22,11 +23,17 @@ interface AppState {
   // Update requirement media URL
   updateMediaUrl: (beltId: BeltId, requirementId: string, mediaUrl: string) => void;
 
+  // Update requirement photo
+  updatePhoto: (beltId: BeltId, requirementId: string, photoUri: string) => void;
+
+  // Remove requirement photo
+  removePhoto: (beltId: BeltId, requirementId: string) => Promise<void>;
+
   // Get requirement progress
   getRequirementProgress: (beltId: BeltId, requirementId: string) => RequirementProgress;
 
   // Reset belt progress
-  resetBeltProgress: (beltId: BeltId) => void;
+  resetBeltProgress: (beltId: BeltId) => Promise<void>;
 
   // Expanded requirements (for accordion)
   expandedRequirements: Set<string>;
@@ -41,6 +48,7 @@ const defaultRequirementProgress: RequirementProgress = {
   completed: false,
   note: '',
   mediaUrl: '',
+  photoUri: undefined,
 };
 
 export const useStore = create<AppState>()(
@@ -110,14 +118,82 @@ export const useStore = create<AppState>()(
         });
       },
 
+      updatePhoto: (beltId: BeltId, requirementId: string, photoUri: string) => {
+        const state = get();
+        const beltProgress = state.progress[beltId] || {};
+        const reqProgress = beltProgress[requirementId] || { ...defaultRequirementProgress };
+
+        set({
+          progress: {
+            ...state.progress,
+            [beltId]: {
+              ...beltProgress,
+              [requirementId]: {
+                ...reqProgress,
+                photoUri,
+              },
+            },
+          },
+        });
+      },
+
+      removePhoto: async (beltId: BeltId, requirementId: string) => {
+        const state = get();
+        const beltProgress = state.progress[beltId] || {};
+        const reqProgress = beltProgress[requirementId] || { ...defaultRequirementProgress };
+
+        // Delete file from file system if it exists
+        if (reqProgress.photoUri) {
+          try {
+            const fileInfo = await FileSystem.getInfoAsync(reqProgress.photoUri);
+            if (fileInfo.exists) {
+              await FileSystem.deleteAsync(reqProgress.photoUri);
+            }
+          } catch (error) {
+            console.warn('Failed to delete photo file:', error);
+          }
+        }
+
+        set({
+          progress: {
+            ...state.progress,
+            [beltId]: {
+              ...beltProgress,
+              [requirementId]: {
+                ...reqProgress,
+                photoUri: undefined,
+              },
+            },
+          },
+        });
+      },
+
       getRequirementProgress: (beltId: BeltId, requirementId: string) => {
         const state = get();
         const beltProgress = state.progress[beltId] || {};
         return beltProgress[requirementId] || { ...defaultRequirementProgress };
       },
 
-      resetBeltProgress: (beltId: BeltId) => {
+      resetBeltProgress: async (beltId: BeltId) => {
         const state = get();
+        const beltProgress = state.progress[beltId] || {};
+
+        // Delete all photos for this belt
+        const deletePromises = Object.entries(beltProgress).map(async ([_, reqProgress]) => {
+          if (reqProgress.photoUri) {
+            try {
+              const fileInfo = await FileSystem.getInfoAsync(reqProgress.photoUri);
+              if (fileInfo.exists) {
+                await FileSystem.deleteAsync(reqProgress.photoUri);
+              }
+            } catch (error) {
+              console.warn('Failed to delete photo file:', error);
+            }
+          }
+        });
+
+        await Promise.all(deletePromises);
+
         set({
           progress: {
             ...state.progress,
