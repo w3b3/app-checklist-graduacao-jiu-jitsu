@@ -11,6 +11,7 @@ import { CategoryHeader } from '../components/CategoryHeader';
 import { RequirementItem } from '../components/RequirementItem';
 import { ResetBeltButton } from '../components/ResetBeltButton';
 import { CompletionScreen } from '../components/CompletionScreen';
+import { JoinClassBetaButton } from '../components/JoinClassBetaButton';
 import { BELT_ORDER, BELT_COLORS } from '../data/belts';
 import { getRequirementsByBelt, groupRequirementsByCategory } from '../data/requirements';
 import { Requirement } from '../types';
@@ -190,6 +191,9 @@ export const HomeScreen: React.FC = () => {
               beltId={selectedBelt}
             />
 
+            {/* Fake door test - only show if not 100% complete */}
+            {percentage < 100 && <JoinClassBetaButton />}
+
             {/* Requirements List */}
             <SectionList
               sections={sections}
@@ -285,6 +289,9 @@ export const HomeScreen: React.FC = () => {
         percentage={percentage}
         beltId={selectedBelt}
       />
+
+      {/* Fake door test - only show if not 100% complete */}
+      {percentage < 100 && <JoinClassBetaButton />}
 
       {/* Requirements List */}
       <SectionList

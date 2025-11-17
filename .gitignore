@@ -1,6 +1,10 @@
 # Credentials
 credentials.json
 
+# Firebase config files (not needed - we use GA4 Measurement Protocol)
+google-services.json
+GoogleService-Info.plist
+
 # Node modules
 node_modules/
 .expo/
