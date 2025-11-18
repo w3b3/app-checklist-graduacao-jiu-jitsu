@@ -7,7 +7,17 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "plugins": [
-      "./plugins/withOrientation.js"
+      "./plugins/withOrientation.js",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Permite o BJJ Checklist acessar suas fotos para documentar técnicas",
+          "cameraPermission": "Permite o BJJ Checklist acessar sua câmera para tirar fotos de técnicas"
+        }
+      ],
+      "expo-file-system",
+      "expo-localization",
+      "expo-screen-orientation"
     ],
     "ios": {
       "supportsTablet": true,
