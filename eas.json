@@ -22,7 +22,6 @@
     },
     "production": {
       "autoIncrement": true,
-      "credentialsSource": "local",
       "env": {
         "NODE_ENV": "production"
       }
