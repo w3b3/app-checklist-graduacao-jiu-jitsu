@@ -292,6 +292,177 @@ Before submitting:
 
 ---
 
+## 🔐 Credential Management Strategy
+
+### Current Configuration
+
+This project uses **EAS-managed credentials** (recommended approach). All signing keys and certificates are securely stored on Expo's servers.
+
+**Configuration in `eas.json`:**
+```json
+{
+  "build": {
+    "production": {
+      "autoIncrement": true,
+      "credentialsSource": "local"  // ⚠️ NOTE: Changed from "local" to EAS-managed
+    }
+  }
+}
+```
+
+### Android Credentials (Managed by EAS)
+
+**Current Keystore Information:**
+- **Type:** JKS (Java KeyStore)
+- **Key Alias:** `dblefbabcfad98449353ccbe6b45f63f`
+- **Configuration:** `q0UhEid_2U` (Default)
+- **Updated:** 18 days ago (as of Nov 2025)
+- **MD5 Fingerprint:** `95:74:90:55:EA:EB:9A:5E:18:0C:76:03:EA:28:7E:B6`
+- **SHA1 Fingerprint:** `8A:5F:7C:02:45:59:9F:9F:BC:63:A5:8A:00:79:31:E2:52:56:F0:79`
+- **SHA256 Fingerprint:** `18:F1:41:89:42:9C:0C:80:D5:22:9E:0B:11:DE:EC:3A:65:9A:20:AD:4D:D1:F8:41:D4:9D:CC:C1:7A:10:46:E3`
+
+**Google Play Submission Credentials:**
+- **Service Account:** `eas-expo@graduacao-jiu-jitsu.iam.gserviceaccount.com`
+- **Project ID:** `graduacao-jiu-jitsu`
+- **Client ID:** `108014347043983115472`
+- **Private Key ID:** `ab968060e1f476b2691ccf83deb6fa512c84fdef`
+- **Updated:** 18 days ago
+
+### iOS Credentials (Managed by EAS)
+
+**Apple Developer Account:**
+- **Apple ID:** `ds@brzl.ca`
+- **Team ID:** `Q39UF8B7S5`
+- **App Store Connect App ID:** `6754972177`
+
+**Certificates & Provisioning Profiles:**
+- Automatically managed by EAS Build
+- Distribution certificate generated on-demand
+- Provisioning profiles refreshed automatically
+
+### Push Notifications (Not Yet Configured)
+
+**FCM Legacy:** None assigned yet
+**FCM V1 (Google Service Account):** None assigned yet
+
+### Credential Access
+
+**To view/manage credentials:**
+```bash
+# View all credentials for the project
+eas credentials
+
+# Android-specific credentials
+eas credentials -p android
+
+# iOS-specific credentials
+eas credentials -p ios
+```
+
+**To download Android keystore (backup):**
+```bash
+eas credentials -p android
+# Select: "Keystore: Manage everything needed to build your project"
+# Then: "Download credentials"
+```
+
+### Security Best Practices
+
+1. **Never commit credentials to Git**
+   - Keystore files (`.jks`, `.keystore`)
+   - `credentials.json`
+   - Service account JSON files
+   - Already configured in `.gitignore`
+
+2. **Backup Android Keystore**
+   - Download keystore using `eas credentials`
+   - Store in secure location (1Password, encrypted disk)
+   - **CRITICAL:** If lost, you cannot update app on Play Store
+
+3. **Service Account Permissions**
+   - Google Play service account has minimal permissions
+   - Only for automated submissions via EAS Submit
+   - Can be rotated if compromised
+
+4. **Team Access**
+   - Share Expo account access, not raw credentials
+   - Add team members via expo.dev dashboard
+   - Use role-based access control
+
+### Switching Between Local and EAS-Managed Credentials
+
+**Current:** EAS-managed (recommended)
+**Previous:** Attempted local credentials (failed - no `credentials.json` existed)
+
+**If you need local credentials (not recommended):**
+1. Create `credentials.json` in project root
+2. Add to `.gitignore`
+3. Download keystore via `eas credentials`
+4. Update `eas.json`: `"credentialsSource": "local"`
+5. Store keystore path in `credentials.json`
+
+**Example `credentials.json` (DO NOT COMMIT):**
+```json
+{
+  "android": {
+    "keystore": {
+      "keystorePath": "./android-keystore.jks",
+      "keystorePassword": "SECURE_PASSWORD_HERE",
+      "keyAlias": "dblefbabcfad98449353ccbe6b45f63f",
+      "keyPassword": "SECURE_PASSWORD_HERE"
+    }
+  },
+  "ios": {
+    "provisioningProfilePath": "./profile.mobileprovision",
+    "distributionCertificate": {
+      "path": "./dist-cert.p12",
+      "password": "SECURE_PASSWORD_HERE"
+    }
+  }
+}
+```
+
+### Troubleshooting Credential Issues
+
+**"Build failed: No credentials found"**
+- Ensure `credentialsSource` is NOT set to `"local"` in `eas.json`
+- Run `eas credentials` to verify credentials exist
+- Regenerate if needed: `eas credentials` → Delete → Create new
+
+**"Invalid keystore signature"**
+- Keystore was corrupted or changed
+- Download fresh copy from EAS
+- Never manually edit keystore files
+
+**"Cannot update app - signature mismatch"**
+- Using different keystore than original submission
+- **SOLUTION:** Use original keystore (download from EAS backup)
+- If lost: Must publish as new app with different package name
+
+### Version Updates
+
+When updating app version for new releases:
+
+1. **Update `app.json`:**
+   ```json
+   {
+     "version": "1.0.5",  // Semantic version (user-visible)
+     "ios": {
+       "buildNumber": "21"  // Auto-incremented by EAS
+     },
+     "android": {
+       "versionCode": 21  // Auto-incremented by EAS
+     }
+   }
+   ```
+
+2. **EAS auto-increment handles build numbers:**
+   - Set `"autoIncrement": true` in `eas.json` (already configured)
+   - iOS `buildNumber` and Android `versionCode` increment automatically
+   - Only update `version` string manually
+
+---
+
 ## 🎉 After Approval
 
 Once approved (1-3 days):
