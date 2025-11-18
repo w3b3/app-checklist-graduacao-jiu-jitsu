@@ -1,5 +1,6 @@
 # Credentials
 credentials.json
+*.pem
 
 # Firebase config files (not needed - we use GA4 Measurement Protocol)
 google-services.json
