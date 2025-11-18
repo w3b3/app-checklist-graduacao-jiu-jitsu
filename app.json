@@ -29,7 +29,7 @@
     },
     "android": {
       "package": "com.brothersfight.bjjchecklist",
-      "versionCode": 22,
+      "versionCode": 23,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1E40AF"
