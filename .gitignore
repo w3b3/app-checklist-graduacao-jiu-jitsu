@@ -1,6 +1,9 @@
 # Credentials
 credentials.json
+credentials_forms.json
 *.pem
+.google-tokens.json
+.forms-registry.json
 
 # Firebase config files (not needed - we use GA4 Measurement Protocol)
 google-services.json

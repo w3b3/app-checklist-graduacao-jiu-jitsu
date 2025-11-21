@@ -187,3 +187,4 @@ https://raw.githubusercontent.com/w3b3/app-checklist-graduacao-jiu-jitsu/main/PR
 - Push notifications
 - Detailed analytics
 - Remind me to update version in app.json before building a new version to be published. Version must increase for App Store/Play Store to accept updates
+- always ask if we need to update app.json version
