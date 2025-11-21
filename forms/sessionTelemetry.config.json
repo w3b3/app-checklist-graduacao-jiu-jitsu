@@ -1,0 +1,77 @@
+{
+  "name": "sessionTelemetry",
+  "title": "BJJ Checklist Session Telemetry",
+  "description": "Track user session metrics and engagement",
+  "fields": [
+    {
+      "name": "sessionId",
+      "label": "Session ID",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "sessionStart",
+      "label": "Session Start Time",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "sessionEnd",
+      "label": "Session End Time",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "durationSeconds",
+      "label": "Duration (seconds)",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "beltsViewed",
+      "label": "Belts Viewed",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "techniquesChecked",
+      "label": "Techniques Checked",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "techniquesUnchecked",
+      "label": "Techniques Unchecked",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "notesAdded",
+      "label": "Notes Added",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "mediasAdded",
+      "label": "Media URLs Added",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "shareCount",
+      "label": "Shares",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "deviceInfo",
+      "label": "Device Info",
+      "type": "text",
+      "required": true
+    }
+  ],
+  "linkToSheets": true,
+  "batching": {
+    "enabled": false
+  }
+}

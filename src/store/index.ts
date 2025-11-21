@@ -2,12 +2,16 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system/legacy';
-import { BeltId, BeltProgress, RequirementProgress } from '../types';
+import { BeltId, BeltProgress, RequirementProgress, TechniqueType } from '../types';
 
 interface AppState {
   // Current selected belt
   selectedBelt: BeltId;
   setSelectedBelt: (belt: BeltId) => void;
+
+  // Current selected technique tab
+  selectedTechniqueTab: TechniqueType;
+  setSelectedTechniqueTab: (tab: TechniqueType) => void;
 
   // Progress data for all belts
   progress: {
@@ -38,10 +42,6 @@ interface AppState {
   // Expanded requirements (for accordion)
   expandedRequirements: Set<string>;
   toggleExpanded: (requirementId: string) => void;
-
-  // Expanded categories
-  expandedCategories: Set<string>;
-  toggleCategory: (category: string) => void;
 }
 
 const defaultRequirementProgress: RequirementProgress = {
@@ -55,11 +55,13 @@ export const useStore = create<AppState>()(
   persist(
     (set, get) => ({
       selectedBelt: 'azul',
+      selectedTechniqueTab: 'finalizacoes',
       progress: {},
       expandedRequirements: new Set(),
-      expandedCategories: new Set(['Quedas']), // First category expanded by default
 
       setSelectedBelt: (belt: BeltId) => set({ selectedBelt: belt }),
+
+      setSelectedTechniqueTab: (tab: TechniqueType) => set({ selectedTechniqueTab: tab }),
 
       toggleRequirement: (beltId: BeltId, requirementId: string) => {
         const state = get();
@@ -212,31 +214,18 @@ export const useStore = create<AppState>()(
         }
         set({ expandedRequirements: newExpanded });
       },
-
-      toggleCategory: (category: string) => {
-        const state = get();
-        const newExpanded = new Set(state.expandedCategories);
-        if (newExpanded.has(category)) {
-          newExpanded.delete(category);
-        } else {
-          newExpanded.add(category);
-        }
-        set({ expandedCategories: newExpanded });
-      },
     }),
     {
       name: 'bjj-checklist-storage',
       storage: createJSONStorage(() => AsyncStorage),
-      // Custom serialization for Sets
       partialize: (state) => ({
         selectedBelt: state.selectedBelt,
+        selectedTechniqueTab: state.selectedTechniqueTab,
         progress: state.progress,
-        expandedCategories: Array.from(state.expandedCategories),
       }),
       onRehydrateStorage: () => (state) => {
         if (state) {
-          // Convert arrays back to Sets
-          state.expandedCategories = new Set(state.expandedCategories as any);
+          // Initialize expandedRequirements (not persisted)
           state.expandedRequirements = new Set();
         }
       },

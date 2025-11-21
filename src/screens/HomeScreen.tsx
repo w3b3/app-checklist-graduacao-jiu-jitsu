@@ -1,25 +1,23 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { View, ScrollView, SectionList, StyleSheet, Text, useWindowDimensions, Dimensions } from 'react-native';
+import { View, ScrollView, FlatList, StyleSheet, Text, useWindowDimensions, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useStore } from '../store';
-import { BeltTab } from '../components/BeltTab';
-import { BeltSidebarItem } from '../components/BeltSidebarItem';
+import { BeltDropdown } from '../components/BeltDropdown';
+import { TechniqueTypeTab } from '../components/TechniqueTypeTab';
+import { TechniqueTypeSidebar } from '../components/TechniqueTypeSidebar';
 import { ProgressBar } from '../components/ProgressBar';
-import { CategoryHeader } from '../components/CategoryHeader';
 import { RequirementItem } from '../components/RequirementItem';
 import { ResetBeltButton } from '../components/ResetBeltButton';
 import { CompletionScreen } from '../components/CompletionScreen';
 import { JoinClassBetaButton } from '../components/JoinClassBetaButton';
-import { BELT_ORDER, BELT_COLORS } from '../data/belts';
-import { getRequirementsByBelt, groupRequirementsByCategory } from '../data/requirements';
-import { Requirement } from '../types';
+import { FeatureSuggestionLink } from '../components/FeatureSuggestionLink';
+import { BELT_COLORS } from '../data/belts';
+import { getRequirementsByBelt, getRequirementsByBeltAndType } from '../data/requirements';
+import { TechniqueType } from '../types';
 
-interface Section {
-  title: string;
-  data: Requirement[];
-}
+const TECHNIQUE_TYPES: TechniqueType[] = ['finalizacoes', 'quedas', 'raspagens', 'passagens', 'outros'];
 
 export const HomeScreen: React.FC = () => {
   const { width, height } = useWindowDimensions();
@@ -28,11 +26,11 @@ export const HomeScreen: React.FC = () => {
   const {
     selectedBelt,
     setSelectedBelt,
+    selectedTechniqueTab,
+    setSelectedTechniqueTab,
     progress,
     toggleRequirement,
     getRequirementProgress,
-    expandedCategories,
-    toggleCategory,
     expandedRequirements,
     toggleExpanded,
     updateNote,
@@ -95,20 +93,16 @@ export const HomeScreen: React.FC = () => {
   // Increased padding for phones
   const phonePadding = 20;
 
-  const requirements = useMemo(() => getRequirementsByBelt(selectedBelt), [selectedBelt]);
+  // Get requirements for current belt AND technique type
+  const requirements = useMemo(
+    () => getRequirementsByBeltAndType(selectedBelt, selectedTechniqueTab),
+    [selectedBelt, selectedTechniqueTab]
+  );
 
-  const sections: Section[] = useMemo(() => {
-    const grouped = groupRequirementsByCategory(requirements);
-    return Array.from(grouped.entries()).map(([category, reqs]) => ({
-      title: category,
-      data: reqs,
-    }));
-  }, [requirements]);
-
-  // Calculate progress
+  // Calculate progress for current technique type only (per-tab progress)
   const { completed, total, percentage } = useMemo(() => {
     const beltProgress = progress[selectedBelt] || {};
-    const completedCount = Object.values(beltProgress).filter(p => p.completed).length;
+    const completedCount = requirements.filter(req => beltProgress[req.id]?.completed).length;
     const totalCount = requirements.length;
     const pct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
     return {
@@ -118,30 +112,18 @@ export const HomeScreen: React.FC = () => {
     };
   }, [progress, selectedBelt, requirements]);
 
-  // Calculate progress for each category
-  const getCategoryProgress = (category: string) => {
+  // Calculate overall belt progress (for completion check)
+  const overallProgress = useMemo(() => {
+    const allRequirements = getRequirementsByBelt(selectedBelt);
     const beltProgress = progress[selectedBelt] || {};
-    const categoryReqs = requirements.filter(r => r.category === category);
-    const completedInCategory = categoryReqs.filter(
-      r => beltProgress[r.id]?.completed
-    ).length;
-    return {
-      completed: completedInCategory,
-      total: categoryReqs.length,
-    };
-  };
+    const completedCount = Object.values(beltProgress).filter(p => p.completed).length;
+    const totalCount = allRequirements.length;
+    const pct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+    return { completed: completedCount, total: totalCount, percentage: pct };
+  }, [progress, selectedBelt]);
 
-  // Calculate belt tab progress for each belt
-  const getBeltProgress = (beltId: string): number => {
-    const beltReqs = getRequirementsByBelt(beltId);
-    const beltProg = progress[beltId] || {};
-    const completedCount = Object.values(beltProg).filter(p => p.completed).length;
-    const totalCount = beltReqs.length;
-    return totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
-  };
-
-  // Show completion screen if 100%
-  if (percentage === 100 && total > 0) {
+  // Show completion screen if 100% overall belt progress
+  if (overallProgress.percentage === 100 && overallProgress.total > 0) {
     return (
       <SafeAreaView edges={['top', 'bottom']} style={styles.container}>
         <StatusBar style="auto" />
@@ -150,6 +132,7 @@ export const HomeScreen: React.FC = () => {
           beltName={belt.displayName}
           onReset={() => resetBeltProgress(selectedBelt)}
         />
+        <FeatureSuggestionLink />
       </SafeAreaView>
     );
   }
@@ -162,27 +145,21 @@ export const HomeScreen: React.FC = () => {
         <View style={styles.splitContainer}>
           {/* Left Sidebar */}
           <View style={styles.sidebar}>
-            <Text style={styles.sidebarTitle}>Faixas</Text>
-            <ScrollView showsVerticalScrollIndicator={false}>
-              {BELT_ORDER.map((beltItem) => (
-                <BeltSidebarItem
-                  key={beltItem.id}
-                  belt={beltItem}
-                  isActive={selectedBelt === beltItem.id}
-                  progress={getBeltProgress(beltItem.id)}
-                  onPress={() => setSelectedBelt(beltItem.id)}
-                />
-              ))}
-            </ScrollView>
+            {/* Belt Dropdown */}
+            <BeltDropdown
+              selectedBelt={selectedBelt}
+              onSelectBelt={setSelectedBelt}
+            />
+
+            {/* Technique Type Tabs (Vertical) */}
+            <TechniqueTypeSidebar
+              selectedType={selectedTechniqueTab}
+              onSelectType={setSelectedTechniqueTab}
+            />
           </View>
 
           {/* Right Main Content */}
           <View style={styles.mainContent}>
-            {/* Header */}
-            <View style={styles.header}>
-              <Text style={styles.headerTitle}>{belt.displayName}</Text>
-            </View>
-
             {/* Progress Bar */}
             <ProgressBar
               current={completed}
@@ -192,31 +169,13 @@ export const HomeScreen: React.FC = () => {
             />
 
             {/* Fake door test - only show if not 100% complete */}
-            {percentage < 100 && <JoinClassBetaButton />}
+            {overallProgress.percentage < 100 && <JoinClassBetaButton />}
 
             {/* Requirements List */}
-            <SectionList
-              sections={sections}
+            <FlatList
+              data={requirements}
               keyExtractor={(item) => item.id}
-              stickySectionHeadersEnabled={true}
-              renderSectionHeader={({ section }) => {
-                const { completed: categoryCompleted, total: categoryTotal } = getCategoryProgress(section.title);
-                const isExpanded = expandedCategories.has(section.title);
-                return (
-                  <CategoryHeader
-                    title={section.title}
-                    completedCount={categoryCompleted}
-                    totalCount={categoryTotal}
-                    isExpanded={isExpanded}
-                    onToggle={() => toggleCategory(section.title)}
-                    beltId={selectedBelt}
-                  />
-                );
-              }}
-              renderItem={({ item, section }) => {
-                const isExpanded = expandedCategories.has(section.title);
-                if (!isExpanded) return null;
-
+              renderItem={({ item }) => {
                 const reqProgress = getRequirementProgress(selectedBelt, item.id);
                 const isItemExpanded = expandedRequirements.has(item.id);
 
@@ -240,10 +199,13 @@ export const HomeScreen: React.FC = () => {
                 </View>
               }
               ListFooterComponent={
-                <ResetBeltButton
-                  beltName={belt.displayName}
-                  onReset={() => resetBeltProgress(selectedBelt)}
-                />
+                <>
+                  <ResetBeltButton
+                    beltName={belt.displayName}
+                    onReset={() => resetBeltProgress(selectedBelt)}
+                  />
+                  <FeatureSuggestionLink />
+                </>
               }
               contentContainerStyle={styles.listContent}
             />
@@ -258,27 +220,27 @@ export const HomeScreen: React.FC = () => {
     <SafeAreaView edges={['top', 'bottom']} style={styles.container}>
       <StatusBar style="auto" />
 
-      {/* Header */}
-      <View style={[styles.header, { paddingHorizontal: phonePadding }]}>
-        <Text style={styles.headerTitle}>Checklist de Graduação</Text>
-      </View>
+      {/* Belt Dropdown */}
+      <BeltDropdown
+        selectedBelt={selectedBelt}
+        onSelectBelt={setSelectedBelt}
+      />
 
-      {/* Belt Tabs */}
+      {/* Technique Type Tabs */}
       <View style={styles.tabsContainer}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={[styles.tabsContent, { paddingHorizontal: phonePadding - 16 }]}
         >
-        {BELT_ORDER.map((beltItem) => (
-          <BeltTab
-            key={beltItem.id}
-            belt={beltItem}
-            isActive={selectedBelt === beltItem.id}
-            progress={getBeltProgress(beltItem.id)}
-            onPress={() => setSelectedBelt(beltItem.id)}
-          />
-        ))}
+          {TECHNIQUE_TYPES.map((type) => (
+            <TechniqueTypeTab
+              key={type}
+              type={type}
+              isActive={selectedTechniqueTab === type}
+              onPress={() => setSelectedTechniqueTab(type)}
+            />
+          ))}
         </ScrollView>
       </View>
 
@@ -291,31 +253,13 @@ export const HomeScreen: React.FC = () => {
       />
 
       {/* Fake door test - only show if not 100% complete */}
-      {percentage < 100 && <JoinClassBetaButton />}
+      {overallProgress.percentage < 100 && <JoinClassBetaButton />}
 
       {/* Requirements List */}
-      <SectionList
-        sections={sections}
+      <FlatList
+        data={requirements}
         keyExtractor={(item) => item.id}
-        stickySectionHeadersEnabled={true}
-        renderSectionHeader={({ section }) => {
-          const { completed: categoryCompleted, total: categoryTotal } = getCategoryProgress(section.title);
-          const isExpanded = expandedCategories.has(section.title);
-          return (
-            <CategoryHeader
-              title={section.title}
-              completedCount={categoryCompleted}
-              totalCount={categoryTotal}
-              isExpanded={isExpanded}
-              onToggle={() => toggleCategory(section.title)}
-              beltId={selectedBelt}
-            />
-          );
-        }}
-        renderItem={({ item, section }) => {
-          const isExpanded = expandedCategories.has(section.title);
-          if (!isExpanded) return null;
-
+        renderItem={({ item }) => {
           const reqProgress = getRequirementProgress(selectedBelt, item.id);
           const isItemExpanded = expandedRequirements.has(item.id);
 
@@ -339,10 +283,13 @@ export const HomeScreen: React.FC = () => {
           </View>
         }
         ListFooterComponent={
-          <ResetBeltButton
-            beltName={belt.displayName}
-            onReset={() => resetBeltProgress(selectedBelt)}
-          />
+          <>
+            <ResetBeltButton
+              beltName={belt.displayName}
+              onReset={() => resetBeltProgress(selectedBelt)}
+            />
+            <FeatureSuggestionLink />
+          </>
         }
         contentContainerStyle={styles.listContent}
       />
@@ -366,33 +313,11 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderRightColor: '#E5E7EB',
     paddingTop: 16,
-    paddingHorizontal: 8,
-  },
-  sidebarTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#6B7280',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    paddingHorizontal: 16,
-    paddingBottom: 12,
   },
   mainContent: {
     flex: 1,
     width: '100%',
     maxWidth: '100%',
-  },
-  // Shared styles
-  header: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#111827',
   },
   tabsContainer: {
     borderBottomWidth: 1,
@@ -400,7 +325,7 @@ const styles = StyleSheet.create({
   },
   tabsContent: {
     paddingHorizontal: 4,
-    height: 60,
+    height: 56,
     alignItems: 'center',
   },
   listContent: {

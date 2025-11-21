@@ -1,0 +1,57 @@
+{
+  "name": "techniqueAnalytics",
+  "title": "BJJ Technique Analytics",
+  "description": "Track which techniques users interact with",
+  "fields": [
+    {
+      "name": "techniqueId",
+      "label": "Technique ID",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "techniqueName",
+      "label": "Technique Name",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "action",
+      "label": "Action Type",
+      "type": "choice",
+      "required": true,
+      "options": ["Checked", "Unchecked"]
+    },
+    {
+      "name": "belt",
+      "label": "Belt Level",
+      "type": "choice",
+      "required": true,
+      "options": ["Azul", "Roxa", "Marrom", "Preta"]
+    },
+    {
+      "name": "category",
+      "label": "Technique Category",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "timestamp",
+      "label": "Timestamp",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "sessionId",
+      "label": "Session ID",
+      "type": "text",
+      "required": true
+    }
+  ],
+  "linkToSheets": true,
+  "batching": {
+    "enabled": true,
+    "flushInterval": 30000,
+    "batchSize": 10
+  }
+}

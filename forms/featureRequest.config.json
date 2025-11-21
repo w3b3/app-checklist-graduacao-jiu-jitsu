@@ -1,0 +1,43 @@
+{
+  "name": "featureRequest",
+  "title": "BJJ Checklist Feature Requests",
+  "description": "Collect feature requests from users",
+  "fields": [
+    {
+      "name": "featureDescription",
+      "label": "Feature Description",
+      "type": "paragraph",
+      "required": true
+    },
+    {
+      "name": "priority",
+      "label": "Priority",
+      "type": "choice",
+      "required": false,
+      "options": ["Low", "Medium", "High"]
+    },
+    {
+      "name": "belt",
+      "label": "Belt Level",
+      "type": "choice",
+      "required": true,
+      "options": ["Azul", "Roxa", "Marrom", "Preta"]
+    },
+    {
+      "name": "email",
+      "label": "Email (optional)",
+      "type": "text",
+      "required": false
+    },
+    {
+      "name": "timestamp",
+      "label": "Timestamp",
+      "type": "text",
+      "required": true
+    }
+  ],
+  "linkToSheets": true,
+  "batching": {
+    "enabled": false
+  }
+}

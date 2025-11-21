@@ -1,4 +1,4 @@
-import { Requirement } from '../types';
+import { Requirement, BeltId, TechniqueType } from '../types';
 
 export const REQUIREMENTS: Requirement[] = [
   // FAIXA AZUL - Detailed techniques
@@ -75,64 +75,206 @@ export const REQUIREMENTS: Requirement[] = [
   // Ataque de Pé
   { id: 'azul-ataque-1', belt: 'azul', category: 'Ataque de Pé', name: 'Botinha na passagem de guarda' },
 
-  // FAIXA ROXA - Count-based requirements
-  { id: 'roxa-baianas', belt: 'roxa', category: 'Baianas', name: '02 Baianas (leve + pesado)', targetCount: 2 },
-  { id: 'roxa-quedas', belt: 'roxa', category: 'Quedas', name: '06 Quedas com nomes', targetCount: 6 },
-  { id: 'roxa-rasp-joelhos', belt: 'roxa', category: 'Raspagem', name: '02 Raspagem com oponente de joelhos', targetCount: 2 },
-  { id: 'roxa-rasp-pe', belt: 'roxa', category: 'Raspagem', name: '02 Raspagem com oponente em pé', targetCount: 2 },
-  { id: 'roxa-rasp-meia', belt: 'roxa', category: 'Raspagem', name: '02 Raspagem da meia guarda', targetCount: 2 },
-  { id: 'roxa-passagens', belt: 'roxa', category: 'Passagem', name: '04 Passagens de guarda', targetCount: 4 },
-  { id: 'roxa-armlocks', belt: 'roxa', category: 'Finalizações', name: '03 Arm Locks em diferentes posições', targetCount: 3 },
-  { id: 'roxa-triangulos', belt: 'roxa', category: 'Finalizações', name: '02 Triângulos', targetCount: 2 },
-  { id: 'roxa-omoplatas', belt: 'roxa', category: 'Finalizações', name: '02 Omoplatas', targetCount: 2 },
-  { id: 'roxa-estrang-guarda', belt: 'roxa', category: 'Finalizações', name: '03 Estrangulamentos na guarda', targetCount: 3 },
-  { id: 'roxa-estrang-montada', belt: 'roxa', category: 'Finalizações', name: '03 Estrangulamentos na montada', targetCount: 3 },
-  { id: 'roxa-final-100kg', belt: 'roxa', category: 'Finalizações', name: '03 Finalizações no 100kg', targetCount: 3 },
-  { id: 'roxa-saidas-montada', belt: 'roxa', category: 'Saídas', name: '02 Saídas da montada', targetCount: 2 },
-  { id: 'roxa-saidas-costas', belt: 'roxa', category: 'Saídas', name: '02 Saída de pegada pelas costas', targetCount: 2 },
-  { id: 'roxa-costas', belt: 'roxa', category: 'Costas', name: '02 Idas para as costas, sendo 01 berimbolo', targetCount: 2 },
+  // FAIXA ROXA - Individual requirements (split from count-based)
+  // Baianas
+  { id: 'roxa-baianas-1', belt: 'roxa', category: 'Baianas', name: 'Baiana leve' },
+  { id: 'roxa-baianas-2', belt: 'roxa', category: 'Baianas', name: 'Baiana pesado' },
 
-  // FAIXA MARROM - Count-based requirements
-  { id: 'marrom-baianas', belt: 'marrom', category: 'Baianas', name: '02 Baianas (leve + pesado)', targetCount: 2 },
-  { id: 'marrom-quedas', belt: 'marrom', category: 'Quedas', name: '08 Quedas com nomes', targetCount: 8 },
-  { id: 'marrom-rasp-joelhos', belt: 'marrom', category: 'Raspagem', name: '03 Raspagens com oponente de joelhos', targetCount: 3 },
-  { id: 'marrom-rasp-pe', belt: 'marrom', category: 'Raspagem', name: '03 Raspagens com oponente em pé', targetCount: 3 },
-  { id: 'marrom-rasp-meia', belt: 'marrom', category: 'Raspagem', name: '03 Raspagens da meia guarda', targetCount: 3 },
-  { id: 'marrom-rasp-5050', belt: 'marrom', category: 'Raspagem', name: '01 Raspagem da guarda 50/50', targetCount: 1 },
-  { id: 'marrom-rasp-lapela', belt: 'marrom', category: 'Raspagem', name: '01 Raspagem da guarda de lapela', targetCount: 1 },
-  { id: 'marrom-passagens', belt: 'marrom', category: 'Passagem', name: '07 Passagens de guarda (01 da meia guarda, 01 da guarda 50/50, 01 da guarda de lapela)', targetCount: 7 },
-  { id: 'marrom-armlocks', belt: 'marrom', category: 'Finalizações', name: '04 Arm Locks em diferentes posições', targetCount: 4 },
-  { id: 'marrom-triangulos', belt: 'marrom', category: 'Finalizações', name: '02 Triângulos', targetCount: 2 },
-  { id: 'marrom-omoplatas', belt: 'marrom', category: 'Finalizações', name: '02 Omoplatas', targetCount: 2 },
-  { id: 'marrom-final-joelho', belt: 'marrom', category: 'Finalizações', name: '03 Finalizações com joelho na barriga', targetCount: 3 },
-  { id: 'marrom-final-costas', belt: 'marrom', category: 'Finalizações', name: '04 Finalizações nas costas', targetCount: 4 },
-  { id: 'marrom-final-5050', belt: 'marrom', category: 'Finalizações', name: '01 Finalização da guarda 50/50', targetCount: 1 },
-  { id: 'marrom-final-pe', belt: 'marrom', category: 'Finalizações', name: '03 Finalizações no pé', targetCount: 3 },
-  { id: 'marrom-leglock', belt: 'marrom', category: 'Finalizações', name: '02 Leg Lock', targetCount: 2 },
-  { id: 'marrom-estrang-100kg', belt: 'marrom', category: 'Finalizações', name: '03 Estrangulamentos no 100kg', targetCount: 3 },
-  { id: 'marrom-saidas', belt: 'marrom', category: 'Saídas', name: '03 Saídas da montada', targetCount: 3 },
-  { id: 'marrom-costas', belt: 'marrom', category: 'Costas', name: '03 Idas para as costas, sendo 01 berimbolo', targetCount: 3 },
+  // Quedas
+  { id: 'roxa-quedas-1', belt: 'roxa', category: 'Quedas', name: 'Queda 1' },
+  { id: 'roxa-quedas-2', belt: 'roxa', category: 'Quedas', name: 'Queda 2' },
+  { id: 'roxa-quedas-3', belt: 'roxa', category: 'Quedas', name: 'Queda 3' },
+  { id: 'roxa-quedas-4', belt: 'roxa', category: 'Quedas', name: 'Queda 4' },
+  { id: 'roxa-quedas-5', belt: 'roxa', category: 'Quedas', name: 'Queda 5' },
+  { id: 'roxa-quedas-6', belt: 'roxa', category: 'Quedas', name: 'Queda 6' },
 
-  // FAIXA PRETA - Same as Marrom with explanation requirement
-  { id: 'preta-baianas', belt: 'preta', category: 'Baianas', name: '02 Baianas (leve + pesado)', targetCount: 2 },
-  { id: 'preta-quedas', belt: 'preta', category: 'Quedas', name: '08 Quedas com nomes', targetCount: 8 },
-  { id: 'preta-rasp-joelhos', belt: 'preta', category: 'Raspagem', name: '03 Raspagens com oponente de joelhos', targetCount: 3 },
-  { id: 'preta-rasp-pe', belt: 'preta', category: 'Raspagem', name: '03 Raspagens com oponente em pé', targetCount: 3 },
-  { id: 'preta-rasp-meia', belt: 'preta', category: 'Raspagem', name: '03 Raspagens da meia guarda', targetCount: 3 },
-  { id: 'preta-rasp-5050', belt: 'preta', category: 'Raspagem', name: '01 Raspagem da guarda 50/50', targetCount: 1 },
-  { id: 'preta-rasp-lapela', belt: 'preta', category: 'Raspagem', name: '01 Raspagem da guarda de lapela', targetCount: 1 },
-  { id: 'preta-passagens', belt: 'preta', category: 'Passagem', name: '07 Passagens de guarda (01 da meia guarda, 01 da guarda 50/50, 01 da guarda de lapela)', targetCount: 7 },
-  { id: 'preta-armlocks', belt: 'preta', category: 'Finalizações', name: '04 Arm Locks em diferentes posições', targetCount: 4 },
-  { id: 'preta-triangulos', belt: 'preta', category: 'Finalizações', name: '02 Triângulos', targetCount: 2 },
-  { id: 'preta-omoplatas', belt: 'preta', category: 'Finalizações', name: '02 Omoplatas', targetCount: 2 },
-  { id: 'preta-final-joelho', belt: 'preta', category: 'Finalizações', name: '03 Finalizações com joelho na barriga', targetCount: 3 },
-  { id: 'preta-final-costas', belt: 'preta', category: 'Finalizações', name: '04 Finalizações nas costas', targetCount: 4 },
-  { id: 'preta-final-5050', belt: 'preta', category: 'Finalizações', name: '01 Finalização da guarda 50/50', targetCount: 1 },
-  { id: 'preta-final-pe', belt: 'preta', category: 'Finalizações', name: '03 Finalizações no pé', targetCount: 3 },
-  { id: 'preta-leglock', belt: 'preta', category: 'Finalizações', name: '02 Leg Lock', targetCount: 2 },
-  { id: 'preta-estrang-100kg', belt: 'preta', category: 'Finalizações', name: '03 Estrangulamentos no 100kg', targetCount: 3 },
-  { id: 'preta-saidas', belt: 'preta', category: 'Saídas', name: '03 Saídas da montada', targetCount: 3 },
-  { id: 'preta-costas', belt: 'preta', category: 'Costas', name: '03 Idas para as costas, sendo 01 berimbolo', targetCount: 3 },
+  // Raspagem
+  { id: 'roxa-rasp-joelhos-1', belt: 'roxa', category: 'Raspagem', name: 'Raspagem com oponente de joelhos 1' },
+  { id: 'roxa-rasp-joelhos-2', belt: 'roxa', category: 'Raspagem', name: 'Raspagem com oponente de joelhos 2' },
+  { id: 'roxa-rasp-pe-1', belt: 'roxa', category: 'Raspagem', name: 'Raspagem com oponente em pé 1' },
+  { id: 'roxa-rasp-pe-2', belt: 'roxa', category: 'Raspagem', name: 'Raspagem com oponente em pé 2' },
+  { id: 'roxa-rasp-meia-1', belt: 'roxa', category: 'Raspagem', name: 'Raspagem da meia guarda 1' },
+  { id: 'roxa-rasp-meia-2', belt: 'roxa', category: 'Raspagem', name: 'Raspagem da meia guarda 2' },
+
+  // Passagem
+  { id: 'roxa-passagens-1', belt: 'roxa', category: 'Passagem', name: 'Passagem de guarda 1' },
+  { id: 'roxa-passagens-2', belt: 'roxa', category: 'Passagem', name: 'Passagem de guarda 2' },
+  { id: 'roxa-passagens-3', belt: 'roxa', category: 'Passagem', name: 'Passagem de guarda 3' },
+  { id: 'roxa-passagens-4', belt: 'roxa', category: 'Passagem', name: 'Passagem de guarda 4' },
+
+  // Finalizações
+  { id: 'roxa-armlocks-1', belt: 'roxa', category: 'Finalizações', name: 'Arm Lock 1' },
+  { id: 'roxa-armlocks-2', belt: 'roxa', category: 'Finalizações', name: 'Arm Lock 2' },
+  { id: 'roxa-armlocks-3', belt: 'roxa', category: 'Finalizações', name: 'Arm Lock 3' },
+  { id: 'roxa-triangulos-1', belt: 'roxa', category: 'Finalizações', name: 'Triângulo 1' },
+  { id: 'roxa-triangulos-2', belt: 'roxa', category: 'Finalizações', name: 'Triângulo 2' },
+  { id: 'roxa-omoplatas-1', belt: 'roxa', category: 'Finalizações', name: 'Omoplata 1' },
+  { id: 'roxa-omoplatas-2', belt: 'roxa', category: 'Finalizações', name: 'Omoplata 2' },
+  { id: 'roxa-estrang-guarda-1', belt: 'roxa', category: 'Finalizações', name: 'Estrangulamento na guarda 1' },
+  { id: 'roxa-estrang-guarda-2', belt: 'roxa', category: 'Finalizações', name: 'Estrangulamento na guarda 2' },
+  { id: 'roxa-estrang-guarda-3', belt: 'roxa', category: 'Finalizações', name: 'Estrangulamento na guarda 3' },
+  { id: 'roxa-estrang-montada-1', belt: 'roxa', category: 'Finalizações', name: 'Estrangulamento na montada 1' },
+  { id: 'roxa-estrang-montada-2', belt: 'roxa', category: 'Finalizações', name: 'Estrangulamento na montada 2' },
+  { id: 'roxa-estrang-montada-3', belt: 'roxa', category: 'Finalizações', name: 'Estrangulamento na montada 3' },
+  { id: 'roxa-final-100kg-1', belt: 'roxa', category: 'Finalizações', name: 'Finalização no 100kg 1' },
+  { id: 'roxa-final-100kg-2', belt: 'roxa', category: 'Finalizações', name: 'Finalização no 100kg 2' },
+  { id: 'roxa-final-100kg-3', belt: 'roxa', category: 'Finalizações', name: 'Finalização no 100kg 3' },
+
+  // Saídas
+  { id: 'roxa-saidas-montada-1', belt: 'roxa', category: 'Saídas', name: 'Saída da montada 1' },
+  { id: 'roxa-saidas-montada-2', belt: 'roxa', category: 'Saídas', name: 'Saída da montada 2' },
+  { id: 'roxa-saidas-costas-1', belt: 'roxa', category: 'Saídas', name: 'Saída de pegada pelas costas 1' },
+  { id: 'roxa-saidas-costas-2', belt: 'roxa', category: 'Saídas', name: 'Saída de pegada pelas costas 2' },
+
+  // Costas
+  { id: 'roxa-costas-1', belt: 'roxa', category: 'Costas', name: 'Ida para as costas - Berimbolo' },
+  { id: 'roxa-costas-2', belt: 'roxa', category: 'Costas', name: 'Ida para as costas 2' },
+
+  // FAIXA MARROM - Individual requirements (split from count-based)
+  // Baianas
+  { id: 'marrom-baianas-1', belt: 'marrom', category: 'Baianas', name: 'Baiana leve' },
+  { id: 'marrom-baianas-2', belt: 'marrom', category: 'Baianas', name: 'Baiana pesado' },
+
+  // Quedas
+  { id: 'marrom-quedas-1', belt: 'marrom', category: 'Quedas', name: 'Queda 1' },
+  { id: 'marrom-quedas-2', belt: 'marrom', category: 'Quedas', name: 'Queda 2' },
+  { id: 'marrom-quedas-3', belt: 'marrom', category: 'Quedas', name: 'Queda 3' },
+  { id: 'marrom-quedas-4', belt: 'marrom', category: 'Quedas', name: 'Queda 4' },
+  { id: 'marrom-quedas-5', belt: 'marrom', category: 'Quedas', name: 'Queda 5' },
+  { id: 'marrom-quedas-6', belt: 'marrom', category: 'Quedas', name: 'Queda 6' },
+  { id: 'marrom-quedas-7', belt: 'marrom', category: 'Quedas', name: 'Queda 7' },
+  { id: 'marrom-quedas-8', belt: 'marrom', category: 'Quedas', name: 'Queda 8' },
+
+  // Raspagem
+  { id: 'marrom-rasp-joelhos-1', belt: 'marrom', category: 'Raspagem', name: 'Raspagem com oponente de joelhos 1' },
+  { id: 'marrom-rasp-joelhos-2', belt: 'marrom', category: 'Raspagem', name: 'Raspagem com oponente de joelhos 2' },
+  { id: 'marrom-rasp-joelhos-3', belt: 'marrom', category: 'Raspagem', name: 'Raspagem com oponente de joelhos 3' },
+  { id: 'marrom-rasp-pe-1', belt: 'marrom', category: 'Raspagem', name: 'Raspagem com oponente em pé 1' },
+  { id: 'marrom-rasp-pe-2', belt: 'marrom', category: 'Raspagem', name: 'Raspagem com oponente em pé 2' },
+  { id: 'marrom-rasp-pe-3', belt: 'marrom', category: 'Raspagem', name: 'Raspagem com oponente em pé 3' },
+  { id: 'marrom-rasp-meia-1', belt: 'marrom', category: 'Raspagem', name: 'Raspagem da meia guarda 1' },
+  { id: 'marrom-rasp-meia-2', belt: 'marrom', category: 'Raspagem', name: 'Raspagem da meia guarda 2' },
+  { id: 'marrom-rasp-meia-3', belt: 'marrom', category: 'Raspagem', name: 'Raspagem da meia guarda 3' },
+  { id: 'marrom-rasp-5050', belt: 'marrom', category: 'Raspagem', name: 'Raspagem da guarda 50/50' },
+  { id: 'marrom-rasp-lapela', belt: 'marrom', category: 'Raspagem', name: 'Raspagem da guarda de lapela' },
+
+  // Passagem
+  { id: 'marrom-passagens-1', belt: 'marrom', category: 'Passagem', name: 'Passagem de guarda 1' },
+  { id: 'marrom-passagens-2', belt: 'marrom', category: 'Passagem', name: 'Passagem de guarda 2' },
+  { id: 'marrom-passagens-3', belt: 'marrom', category: 'Passagem', name: 'Passagem de guarda 3' },
+  { id: 'marrom-passagens-4', belt: 'marrom', category: 'Passagem', name: 'Passagem de guarda 4' },
+  { id: 'marrom-passagens-5', belt: 'marrom', category: 'Passagem', name: 'Passagem da meia guarda' },
+  { id: 'marrom-passagens-6', belt: 'marrom', category: 'Passagem', name: 'Passagem da guarda 50/50' },
+  { id: 'marrom-passagens-7', belt: 'marrom', category: 'Passagem', name: 'Passagem da guarda de lapela' },
+
+  // Finalizações
+  { id: 'marrom-armlocks-1', belt: 'marrom', category: 'Finalizações', name: 'Arm Lock 1' },
+  { id: 'marrom-armlocks-2', belt: 'marrom', category: 'Finalizações', name: 'Arm Lock 2' },
+  { id: 'marrom-armlocks-3', belt: 'marrom', category: 'Finalizações', name: 'Arm Lock 3' },
+  { id: 'marrom-armlocks-4', belt: 'marrom', category: 'Finalizações', name: 'Arm Lock 4' },
+  { id: 'marrom-triangulos-1', belt: 'marrom', category: 'Finalizações', name: 'Triângulo 1' },
+  { id: 'marrom-triangulos-2', belt: 'marrom', category: 'Finalizações', name: 'Triângulo 2' },
+  { id: 'marrom-omoplatas-1', belt: 'marrom', category: 'Finalizações', name: 'Omoplata 1' },
+  { id: 'marrom-omoplatas-2', belt: 'marrom', category: 'Finalizações', name: 'Omoplata 2' },
+  { id: 'marrom-final-joelho-1', belt: 'marrom', category: 'Finalizações', name: 'Finalização com joelho na barriga 1' },
+  { id: 'marrom-final-joelho-2', belt: 'marrom', category: 'Finalizações', name: 'Finalização com joelho na barriga 2' },
+  { id: 'marrom-final-joelho-3', belt: 'marrom', category: 'Finalizações', name: 'Finalização com joelho na barriga 3' },
+  { id: 'marrom-final-costas-1', belt: 'marrom', category: 'Finalizações', name: 'Finalização nas costas 1' },
+  { id: 'marrom-final-costas-2', belt: 'marrom', category: 'Finalizações', name: 'Finalização nas costas 2' },
+  { id: 'marrom-final-costas-3', belt: 'marrom', category: 'Finalizações', name: 'Finalização nas costas 3' },
+  { id: 'marrom-final-costas-4', belt: 'marrom', category: 'Finalizações', name: 'Finalização nas costas 4' },
+  { id: 'marrom-final-5050', belt: 'marrom', category: 'Finalizações', name: 'Finalização da guarda 50/50' },
+  { id: 'marrom-final-pe-1', belt: 'marrom', category: 'Finalizações', name: 'Finalização no pé 1' },
+  { id: 'marrom-final-pe-2', belt: 'marrom', category: 'Finalizações', name: 'Finalização no pé 2' },
+  { id: 'marrom-final-pe-3', belt: 'marrom', category: 'Finalizações', name: 'Finalização no pé 3' },
+  { id: 'marrom-leglock-1', belt: 'marrom', category: 'Finalizações', name: 'Leg Lock 1' },
+  { id: 'marrom-leglock-2', belt: 'marrom', category: 'Finalizações', name: 'Leg Lock 2' },
+  { id: 'marrom-estrang-100kg-1', belt: 'marrom', category: 'Finalizações', name: 'Estrangulamento no 100kg 1' },
+  { id: 'marrom-estrang-100kg-2', belt: 'marrom', category: 'Finalizações', name: 'Estrangulamento no 100kg 2' },
+  { id: 'marrom-estrang-100kg-3', belt: 'marrom', category: 'Finalizações', name: 'Estrangulamento no 100kg 3' },
+
+  // Saídas
+  { id: 'marrom-saidas-1', belt: 'marrom', category: 'Saídas', name: 'Saída da montada 1' },
+  { id: 'marrom-saidas-2', belt: 'marrom', category: 'Saídas', name: 'Saída da montada 2' },
+  { id: 'marrom-saidas-3', belt: 'marrom', category: 'Saídas', name: 'Saída da montada 3' },
+
+  // Costas
+  { id: 'marrom-costas-1', belt: 'marrom', category: 'Costas', name: 'Ida para as costas - Berimbolo' },
+  { id: 'marrom-costas-2', belt: 'marrom', category: 'Costas', name: 'Ida para as costas 2' },
+  { id: 'marrom-costas-3', belt: 'marrom', category: 'Costas', name: 'Ida para as costas 3' },
+
+  // FAIXA PRETA - Individual requirements (split from count-based, expects detailed explanations)
+  // Baianas
+  { id: 'preta-baianas-1', belt: 'preta', category: 'Baianas', name: 'Baiana leve' },
+  { id: 'preta-baianas-2', belt: 'preta', category: 'Baianas', name: 'Baiana pesado' },
+
+  // Quedas
+  { id: 'preta-quedas-1', belt: 'preta', category: 'Quedas', name: 'Queda 1' },
+  { id: 'preta-quedas-2', belt: 'preta', category: 'Quedas', name: 'Queda 2' },
+  { id: 'preta-quedas-3', belt: 'preta', category: 'Quedas', name: 'Queda 3' },
+  { id: 'preta-quedas-4', belt: 'preta', category: 'Quedas', name: 'Queda 4' },
+  { id: 'preta-quedas-5', belt: 'preta', category: 'Quedas', name: 'Queda 5' },
+  { id: 'preta-quedas-6', belt: 'preta', category: 'Quedas', name: 'Queda 6' },
+  { id: 'preta-quedas-7', belt: 'preta', category: 'Quedas', name: 'Queda 7' },
+  { id: 'preta-quedas-8', belt: 'preta', category: 'Quedas', name: 'Queda 8' },
+
+  // Raspagem
+  { id: 'preta-rasp-joelhos-1', belt: 'preta', category: 'Raspagem', name: 'Raspagem com oponente de joelhos 1' },
+  { id: 'preta-rasp-joelhos-2', belt: 'preta', category: 'Raspagem', name: 'Raspagem com oponente de joelhos 2' },
+  { id: 'preta-rasp-joelhos-3', belt: 'preta', category: 'Raspagem', name: 'Raspagem com oponente de joelhos 3' },
+  { id: 'preta-rasp-pe-1', belt: 'preta', category: 'Raspagem', name: 'Raspagem com oponente em pé 1' },
+  { id: 'preta-rasp-pe-2', belt: 'preta', category: 'Raspagem', name: 'Raspagem com oponente em pé 2' },
+  { id: 'preta-rasp-pe-3', belt: 'preta', category: 'Raspagem', name: 'Raspagem com oponente em pé 3' },
+  { id: 'preta-rasp-meia-1', belt: 'preta', category: 'Raspagem', name: 'Raspagem da meia guarda 1' },
+  { id: 'preta-rasp-meia-2', belt: 'preta', category: 'Raspagem', name: 'Raspagem da meia guarda 2' },
+  { id: 'preta-rasp-meia-3', belt: 'preta', category: 'Raspagem', name: 'Raspagem da meia guarda 3' },
+  { id: 'preta-rasp-5050', belt: 'preta', category: 'Raspagem', name: 'Raspagem da guarda 50/50' },
+  { id: 'preta-rasp-lapela', belt: 'preta', category: 'Raspagem', name: 'Raspagem da guarda de lapela' },
+
+  // Passagem
+  { id: 'preta-passagens-1', belt: 'preta', category: 'Passagem', name: 'Passagem de guarda 1' },
+  { id: 'preta-passagens-2', belt: 'preta', category: 'Passagem', name: 'Passagem de guarda 2' },
+  { id: 'preta-passagens-3', belt: 'preta', category: 'Passagem', name: 'Passagem de guarda 3' },
+  { id: 'preta-passagens-4', belt: 'preta', category: 'Passagem', name: 'Passagem de guarda 4' },
+  { id: 'preta-passagens-5', belt: 'preta', category: 'Passagem', name: 'Passagem da meia guarda' },
+  { id: 'preta-passagens-6', belt: 'preta', category: 'Passagem', name: 'Passagem da guarda 50/50' },
+  { id: 'preta-passagens-7', belt: 'preta', category: 'Passagem', name: 'Passagem da guarda de lapela' },
+
+  // Finalizações
+  { id: 'preta-armlocks-1', belt: 'preta', category: 'Finalizações', name: 'Arm Lock 1' },
+  { id: 'preta-armlocks-2', belt: 'preta', category: 'Finalizações', name: 'Arm Lock 2' },
+  { id: 'preta-armlocks-3', belt: 'preta', category: 'Finalizações', name: 'Arm Lock 3' },
+  { id: 'preta-armlocks-4', belt: 'preta', category: 'Finalizações', name: 'Arm Lock 4' },
+  { id: 'preta-triangulos-1', belt: 'preta', category: 'Finalizações', name: 'Triângulo 1' },
+  { id: 'preta-triangulos-2', belt: 'preta', category: 'Finalizações', name: 'Triângulo 2' },
+  { id: 'preta-omoplatas-1', belt: 'preta', category: 'Finalizações', name: 'Omoplata 1' },
+  { id: 'preta-omoplatas-2', belt: 'preta', category: 'Finalizações', name: 'Omoplata 2' },
+  { id: 'preta-final-joelho-1', belt: 'preta', category: 'Finalizações', name: 'Finalização com joelho na barriga 1' },
+  { id: 'preta-final-joelho-2', belt: 'preta', category: 'Finalizações', name: 'Finalização com joelho na barriga 2' },
+  { id: 'preta-final-joelho-3', belt: 'preta', category: 'Finalizações', name: 'Finalização com joelho na barriga 3' },
+  { id: 'preta-final-costas-1', belt: 'preta', category: 'Finalizações', name: 'Finalização nas costas 1' },
+  { id: 'preta-final-costas-2', belt: 'preta', category: 'Finalizações', name: 'Finalização nas costas 2' },
+  { id: 'preta-final-costas-3', belt: 'preta', category: 'Finalizações', name: 'Finalização nas costas 3' },
+  { id: 'preta-final-costas-4', belt: 'preta', category: 'Finalizações', name: 'Finalização nas costas 4' },
+  { id: 'preta-final-5050', belt: 'preta', category: 'Finalizações', name: 'Finalização da guarda 50/50' },
+  { id: 'preta-final-pe-1', belt: 'preta', category: 'Finalizações', name: 'Finalização no pé 1' },
+  { id: 'preta-final-pe-2', belt: 'preta', category: 'Finalizações', name: 'Finalização no pé 2' },
+  { id: 'preta-final-pe-3', belt: 'preta', category: 'Finalizações', name: 'Finalização no pé 3' },
+  { id: 'preta-leglock-1', belt: 'preta', category: 'Finalizações', name: 'Leg Lock 1' },
+  { id: 'preta-leglock-2', belt: 'preta', category: 'Finalizações', name: 'Leg Lock 2' },
+  { id: 'preta-estrang-100kg-1', belt: 'preta', category: 'Finalizações', name: 'Estrangulamento no 100kg 1' },
+  { id: 'preta-estrang-100kg-2', belt: 'preta', category: 'Finalizações', name: 'Estrangulamento no 100kg 2' },
+  { id: 'preta-estrang-100kg-3', belt: 'preta', category: 'Finalizações', name: 'Estrangulamento no 100kg 3' },
+
+  // Saídas
+  { id: 'preta-saidas-1', belt: 'preta', category: 'Saídas', name: 'Saída da montada 1' },
+  { id: 'preta-saidas-2', belt: 'preta', category: 'Saídas', name: 'Saída da montada 2' },
+  { id: 'preta-saidas-3', belt: 'preta', category: 'Saídas', name: 'Saída da montada 3' },
+
+  // Costas
+  { id: 'preta-costas-1', belt: 'preta', category: 'Costas', name: 'Ida para as costas - Berimbolo' },
+  { id: 'preta-costas-2', belt: 'preta', category: 'Costas', name: 'Ida para as costas 2' },
+  { id: 'preta-costas-3', belt: 'preta', category: 'Costas', name: 'Ida para as costas 3' },
 ];
 
 // Helper function to get requirements by belt
@@ -153,4 +295,71 @@ export function groupRequirementsByCategory(requirements: Requirement[]): Map<st
   });
 
   return grouped;
+}
+
+// Map category names to technique types
+export function getCategoryTechniqueType(category: string, belt: BeltId): TechniqueType {
+  // Normalize category for case-insensitive matching
+  const cat = category.toLowerCase();
+
+  // Azul belt (12 categories)
+  if (belt === 'azul') {
+    // Finalizações: submissions and attacks
+    if (cat.includes('cem kilos') || cat.includes('100') ||
+        cat.includes('joelho') ||
+        cat.includes('montada') ||
+        cat.includes('guarda fechada') ||
+        cat.includes('costas')) {
+      return 'finalizacoes';
+    }
+    // Quedas: takedowns
+    if (cat.includes('quedas') || cat.includes('ataque de pé')) {
+      return 'quedas';
+    }
+    // Raspagens: sweeps
+    if (cat.includes('raspagem') || cat.includes('meia guarda')) {
+      return 'raspagens';
+    }
+    // Passagens: guard passes
+    if (cat.includes('passagem')) {
+      return 'passagens';
+    }
+    // Outros: escapes and fundamentals
+    if (cat.includes('saídas') || cat.includes('saidas') || cat.includes('fundamentos')) {
+      return 'outros';
+    }
+  }
+
+  // Roxa, Marrom, Preta belts (7 categories with consistent structure)
+  // Finalizações
+  if (cat.includes('finalizações') || cat.includes('finalizacoes') || cat.includes('costas')) {
+    return 'finalizacoes';
+  }
+  // Quedas
+  if (cat.includes('quedas') || cat.includes('baianas')) {
+    return 'quedas';
+  }
+  // Raspagens
+  if (cat.includes('raspagem')) {
+    return 'raspagens';
+  }
+  // Passagens
+  if (cat.includes('passagem')) {
+    return 'passagens';
+  }
+  // Outros (saídas)
+  if (cat.includes('saídas') || cat.includes('saidas')) {
+    return 'outros';
+  }
+
+  // Default fallback
+  return 'outros';
+}
+
+// Get requirements filtered by belt and technique type
+export function getRequirementsByBeltAndType(beltId: BeltId, techniqueType: TechniqueType): Requirement[] {
+  const beltRequirements = getRequirementsByBelt(beltId);
+  return beltRequirements.filter(req =>
+    getCategoryTechniqueType(req.category, beltId) === techniqueType
+  );
 }

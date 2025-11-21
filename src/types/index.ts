@@ -1,5 +1,7 @@
 export type BeltId = 'azul' | 'roxa' | 'marrom' | 'preta';
 
+export type TechniqueType = 'finalizacoes' | 'quedas' | 'raspagens' | 'passagens' | 'outros';
+
 export interface Requirement {
   id: string;
   belt: BeltId;
