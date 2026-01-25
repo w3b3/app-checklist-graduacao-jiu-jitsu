@@ -2,13 +2,9 @@
  * Auth API
  *
  * Functions for authenticating with the tatame0 backend.
+ * Uses Firebase compat API for React Native compatibility.
  */
 
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut as firebaseSignOut,
-} from 'firebase/auth';
 import apiClient, { saveAuthTokens, clearAuthTokens } from './client';
 import { getFirebaseAuth, isFirebaseInitialized } from '../config/firebase';
 
@@ -32,8 +28,8 @@ export interface AuthResponse {
  */
 export async function signInWithEmail(email: string, password: string): Promise<AuthResponse> {
   const auth = getFirebaseAuth();
-  const userCredential = await signInWithEmailAndPassword(auth, email, password);
-  const idToken = await userCredential.user.getIdToken();
+  const userCredential = await auth.signInWithEmailAndPassword(email, password);
+  const idToken = await userCredential.user!.getIdToken();
 
   return authenticateWithBackend(idToken);
 }
@@ -43,8 +39,8 @@ export async function signInWithEmail(email: string, password: string): Promise<
  */
 export async function signUpWithEmail(email: string, password: string): Promise<AuthResponse> {
   const auth = getFirebaseAuth();
-  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-  const idToken = await userCredential.user.getIdToken();
+  const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+  const idToken = await userCredential.user!.getIdToken();
 
   return authenticateWithBackend(idToken);
 }
@@ -72,7 +68,7 @@ export async function signOut(): Promise<void> {
     // Sign out from Firebase
     if (isFirebaseInitialized()) {
       const auth = getFirebaseAuth();
-      await firebaseSignOut(auth);
+      await auth.signOut();
     }
 
     // Call backend logout to invalidate tokens

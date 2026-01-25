@@ -2,13 +2,11 @@
  * Firebase Configuration
  *
  * Initialize Firebase for authentication.
+ * Uses compat layer for better React Native compatibility.
  */
 
-import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
-import { getAuth, Auth } from 'firebase/auth';
-
-let app: FirebaseApp | null = null;
-let auth: Auth | null = null;
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 
 // Firebase config for tatame0-production
 const firebaseConfig = {
@@ -21,33 +19,26 @@ const firebaseConfig = {
   measurementId: 'G-47S56B9FNX',
 };
 
-/**
- * Initialize Firebase
- */
-export function initializeFirebaseApp(): void {
-  if (getApps().length === 0) {
-    app = initializeApp(firebaseConfig);
-    auth = getAuth(app);
-  } else {
-    app = getApps()[0];
-    auth = getAuth(app);
-  }
+// Initialize Firebase
+if (firebase.apps.length === 0) {
+  firebase.initializeApp(firebaseConfig);
 }
+
+const auth = firebase.auth();
 
 /**
  * Get the Firebase Auth instance
- * Initializes Firebase if not already done
  */
-export function getFirebaseAuth(): Auth {
-  if (!auth) {
-    initializeFirebaseApp();
-  }
-  return auth!;
+export function getFirebaseAuth() {
+  return auth;
 }
 
 /**
  * Check if Firebase is initialized
  */
 export function isFirebaseInitialized(): boolean {
-  return getApps().length > 0;
+  return firebase.apps.length > 0;
 }
+
+export { auth };
+export default firebase;

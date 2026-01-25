@@ -11,10 +11,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // Storage keys for tokens
 export const AUTH_TOKENS_KEY = 'bjj-auth-tokens';
 
-// API base URL - can be configured per environment
-const API_BASE_URL = __DEV__
-  ? 'http://localhost:3000'  // Local development
-  : 'https://api.tatame0.com';  // Production
+// API base URL
+const API_BASE_URL = 'https://api.tatame0.com';
 
 interface AuthTokens {
   accessToken: string;
