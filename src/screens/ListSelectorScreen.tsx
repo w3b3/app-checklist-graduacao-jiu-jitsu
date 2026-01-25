@@ -17,6 +17,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import {
   getLists,
@@ -35,6 +36,7 @@ interface ListSelectorScreenProps {
 
 export default function ListSelectorScreen({ onSelectList, onClose }: ListSelectorScreenProps) {
   const { isAuthenticated } = useAuth();
+  const navigation = useNavigation();
 
   const [lists, setLists] = useState<ListsResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -128,6 +130,9 @@ export default function ListSelectorScreen({ onSelectList, onClose }: ListSelect
     if (onSelectList) {
       onSelectList(list);
     }
+    // TODO: Store selected list ID in app state
+    // For now, just dismiss the modal
+    navigation.goBack();
   };
 
   const renderListItem = ({ item, isSubscribed }: { item: TechniqueList; isSubscribed?: boolean }) => (
@@ -232,35 +237,44 @@ export default function ListSelectorScreen({ onSelectList, onClose }: ListSelect
       )}
 
       <FlatList
-        data={[
-          ...(lists?.default ? [{ ...lists.default, _section: 'default' }] : []),
-          ...(lists?.subscribed.map((l) => ({ ...l, _section: 'subscribed' })) || []),
-          ...(lists?.my_lists.map((l) => ({ ...l, _section: 'my_lists' })) || []),
-          ...(lists?.public.map((l) => ({ ...l, _section: 'public' })) || []),
-        ]}
-        keyExtractor={(item) => item.id}
+        data={(() => {
+          const defaultId = lists?.default?.id;
+          const subscribedIds = new Set(lists?.subscribed?.map((l) => l.id) || []);
+          const myListIds = new Set(lists?.my_lists?.map((l) => l.id) || []);
+
+          return [
+            ...(lists?.default ? [{ ...lists.default, _section: 'default' }] : []),
+            ...(lists?.subscribed?.map((l) => ({ ...l, _section: 'subscribed' })) || []),
+            ...(lists?.my_lists?.map((l) => ({ ...l, _section: 'my_lists' })) || []),
+            // Filter public to exclude default, subscribed, and my_lists
+            ...(lists?.public
+              ?.filter((l) => l.id !== defaultId && !subscribedIds.has(l.id) && !myListIds.has(l.id))
+              .map((l) => ({ ...l, _section: 'public' })) || []),
+          ];
+        })()}
+        keyExtractor={(item) => `${item._section}-${item.id}`}
         renderItem={({ item, index }) => {
-          // Show section headers
-          const showDefaultHeader = item._section === 'default';
-          const showSubscribedHeader =
-            item._section === 'subscribed' &&
-            (index === 0 || (lists?.default && index === 1));
-          const showMyListsHeader =
-            item._section === 'my_lists' &&
-            !lists?.subscribed.some((l, i) => i === index - (lists?.default ? 2 : 1));
-          const showPublicHeader =
-            item._section === 'public' &&
-            !lists?.my_lists.some((l, i) => i === index - (lists?.default ? 2 : 1) - (lists?.subscribed?.length || 0));
+          // Calculate section boundaries
+          const defaultCount = lists?.default ? 1 : 0;
+          const subscribedCount = lists?.subscribed?.length || 0;
+          const myListsCount = lists?.my_lists?.length || 0;
+
+          const subscribedStart = defaultCount;
+          const myListsStart = subscribedStart + subscribedCount;
+          const publicStart = myListsStart + myListsCount;
+
+          // Show section headers at the start of each section
+          const showDefaultHeader = item._section === 'default' && index === 0;
+          const showSubscribedHeader = item._section === 'subscribed' && index === subscribedStart && subscribedCount > 0;
+          const showMyListsHeader = item._section === 'my_lists' && index === myListsStart && myListsCount > 0;
+          const showPublicHeader = item._section === 'public' && index === publicStart;
 
           return (
             <View>
               {showDefaultHeader && <Text style={styles.sectionTitle}>Lista Padrão</Text>}
-              {showSubscribedHeader && (lists?.subscribed?.length ?? 0) > 0 && (
-                <Text style={styles.sectionTitle}>Seguindo</Text>
-              )}
-              {item._section === 'subscribed' && index === (lists?.default ? 1 : 0) && (lists?.subscribed?.length ?? 0) > 0 && (
-                <Text style={styles.sectionTitle}>Seguindo</Text>
-              )}
+              {showSubscribedHeader && <Text style={styles.sectionTitle}>Seguindo</Text>}
+              {showMyListsHeader && <Text style={styles.sectionTitle}>Minhas Listas</Text>}
+              {showPublicHeader && <Text style={styles.sectionTitle}>Listas Públicas</Text>}
               {renderListItem({
                 item: item as TechniqueList,
                 isSubscribed: item._section === 'subscribed',
