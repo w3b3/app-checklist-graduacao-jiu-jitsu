@@ -13,6 +13,7 @@ import { ResetBeltButton } from '../components/ResetBeltButton';
 import { CompletionScreen } from '../components/CompletionScreen';
 import { JoinClassBetaButton } from '../components/JoinClassBetaButton';
 import { FeatureSuggestionLink } from '../components/FeatureSuggestionLink';
+import { ProfileButton } from '../components/ProfileButton';
 import { BELT_COLORS } from '../data/belts';
 import { getRequirementsByBelt, getRequirementsByBeltAndType } from '../data/requirements';
 import { TechniqueType } from '../types';
@@ -145,6 +146,11 @@ export const HomeScreen: React.FC = () => {
         <View style={styles.splitContainer}>
           {/* Left Sidebar */}
           <View style={styles.sidebar}>
+            {/* Profile Button */}
+            <View style={styles.sidebarHeader}>
+              <ProfileButton />
+            </View>
+
             {/* Belt Dropdown */}
             <BeltDropdown
               selectedBelt={selectedBelt}
@@ -220,11 +226,14 @@ export const HomeScreen: React.FC = () => {
     <SafeAreaView edges={['top', 'bottom']} style={styles.container}>
       <StatusBar style="auto" />
 
-      {/* Belt Dropdown */}
-      <BeltDropdown
-        selectedBelt={selectedBelt}
-        onSelectBelt={setSelectedBelt}
-      />
+      {/* Header with Belt Dropdown and Profile */}
+      <View style={styles.headerRow}>
+        <BeltDropdown
+          selectedBelt={selectedBelt}
+          onSelectBelt={setSelectedBelt}
+        />
+        <ProfileButton />
+      </View>
 
       {/* Technique Type Tabs */}
       <View style={styles.tabsContainer}>
@@ -302,6 +311,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 12,
+  },
   // Split-view styles for tablets
   splitContainer: {
     flex: 1,
@@ -313,6 +328,11 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderRightColor: '#E5E7EB',
     paddingTop: 16,
+  },
+  sidebarHeader: {
+    alignItems: 'flex-end',
+    paddingHorizontal: 12,
+    paddingBottom: 8,
   },
   mainContent: {
     flex: 1,
