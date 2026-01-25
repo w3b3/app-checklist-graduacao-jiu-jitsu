@@ -3,6 +3,13 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system/legacy';
 import { BeltId, BeltProgress, RequirementProgress, TechniqueType } from '../types';
+import { TechniqueList, TechniqueItem } from '../api/lists';
+
+// Cache entry for techniques
+interface TechniquesCacheEntry {
+  techniques: TechniqueItem[];
+  fetchedAt: string;
+}
 
 interface AppState {
   // Current selected belt
@@ -13,9 +20,19 @@ interface AppState {
   selectedTechniqueTab: TechniqueType;
   setSelectedTechniqueTab: (tab: TechniqueType) => void;
 
-  // Progress data for all belts
+  // Active list selection (null = legacy hardcoded data)
+  activeListId: string | null;
+  activeList: TechniqueList | null;
+  setActiveList: (list: TechniqueList | null) => void;
+
+  // Techniques cache (per list)
+  techniquesCache: Record<string, TechniquesCacheEntry>;
+  cacheTechniques: (listId: string, techniques: TechniqueItem[]) => void;
+
+  // Progress data - keyed by listId (or 'legacy' for hardcoded data)
+  // Within each list, keyed by technique_key (requirement ID)
   progress: {
-    [beltId: string]: BeltProgress;
+    [listIdOrLegacy: string]: BeltProgress;
   };
 
   // Toggle requirement completion
@@ -56,12 +73,32 @@ export const useStore = create<AppState>()(
     (set, get) => ({
       selectedBelt: 'azul',
       selectedTechniqueTab: 'finalizacoes',
+      activeListId: null,
+      activeList: null,
+      techniquesCache: {},
       progress: {},
       expandedRequirements: new Set(),
 
       setSelectedBelt: (belt: BeltId) => set({ selectedBelt: belt }),
 
       setSelectedTechniqueTab: (tab: TechniqueType) => set({ selectedTechniqueTab: tab }),
+
+      setActiveList: (list: TechniqueList | null) =>
+        set({
+          activeListId: list?.id ?? null,
+          activeList: list,
+        }),
+
+      cacheTechniques: (listId: string, techniques: TechniqueItem[]) =>
+        set((state) => ({
+          techniquesCache: {
+            ...state.techniquesCache,
+            [listId]: {
+              techniques,
+              fetchedAt: new Date().toISOString(),
+            },
+          },
+        })),
 
       toggleRequirement: (beltId: BeltId, requirementId: string) => {
         const state = get();
@@ -221,12 +258,46 @@ export const useStore = create<AppState>()(
       partialize: (state) => ({
         selectedBelt: state.selectedBelt,
         selectedTechniqueTab: state.selectedTechniqueTab,
+        activeListId: state.activeListId,
+        activeList: state.activeList,
+        techniquesCache: state.techniquesCache,
         progress: state.progress,
       }),
       onRehydrateStorage: () => (state) => {
         if (state) {
           // Initialize expandedRequirements (not persisted)
           state.expandedRequirements = new Set();
+
+          // Migration: Convert old belt-based progress to legacy key
+          // Old format: progress.azul['azul-quedas-1']
+          // New format: progress.legacy['azul-quedas-1']
+          const beltKeys = ['azul', 'roxa', 'marrom', 'preta'];
+          const hasOldFormat = beltKeys.some(
+            (belt) => state.progress[belt] && Object.keys(state.progress[belt]).length > 0
+          );
+
+          if (hasOldFormat && !state.progress.legacy) {
+            // Flatten belt-based progress into legacy key
+            const legacy: BeltProgress = {};
+            for (const belt of beltKeys) {
+              const beltProgress = state.progress[belt];
+              if (beltProgress) {
+                Object.assign(legacy, beltProgress);
+              }
+            }
+
+            // Keep old belt keys for backwards compatibility, add legacy
+            state.progress = {
+              ...state.progress,
+              legacy,
+            };
+
+            // Ensure we're in legacy mode
+            if (state.activeListId === undefined) {
+              state.activeListId = null;
+              state.activeList = null;
+            }
+          }
         }
       },
     }

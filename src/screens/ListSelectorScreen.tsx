@@ -21,6 +21,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import {
   getLists,
+  getListById,
   getListByShareCode,
   subscribeByShareCode,
   unsubscribe,
@@ -28,6 +29,7 @@ import {
   ListsResponse,
 } from '../api/lists';
 import { useAuth } from '../contexts/AuthContext';
+import { useStore } from '../store';
 
 interface ListSelectorScreenProps {
   onSelectList?: (list: TechniqueList) => void;
@@ -37,12 +39,14 @@ interface ListSelectorScreenProps {
 export default function ListSelectorScreen({ onSelectList, onClose }: ListSelectorScreenProps) {
   const { isAuthenticated } = useAuth();
   const navigation = useNavigation();
+  const { setActiveList, cacheTechniques, techniquesCache } = useStore();
 
   const [lists, setLists] = useState<ListsResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [shareCode, setShareCode] = useState('');
   const [isJoining, setIsJoining] = useState(false);
+  const [isSelectingList, setIsSelectingList] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchLists = useCallback(async () => {
@@ -126,13 +130,35 @@ export default function ListSelectorScreen({ onSelectList, onClose }: ListSelect
     );
   };
 
-  const handleSelectList = (list: TechniqueList) => {
-    if (onSelectList) {
-      onSelectList(list);
+  const handleSelectList = async (list: TechniqueList) => {
+    if (isSelectingList) return;
+
+    try {
+      setIsSelectingList(true);
+
+      // Check if techniques are already cached
+      const cached = techniquesCache[list.id];
+      if (!cached?.techniques) {
+        // Fetch techniques from API
+        const listData = await getListById(list.id);
+        cacheTechniques(list.id, listData.techniques);
+      }
+
+      // Set as active list in store
+      setActiveList(list);
+
+      // Call optional callback
+      if (onSelectList) {
+        onSelectList(list);
+      }
+
+      navigation.goBack();
+    } catch (err) {
+      console.error('Error selecting list:', err);
+      Alert.alert('Erro', 'Não foi possível carregar a lista');
+    } finally {
+      setIsSelectingList(false);
     }
-    // TODO: Store selected list ID in app state
-    // For now, just dismiss the modal
-    navigation.goBack();
   };
 
   const renderListItem = ({ item, isSubscribed }: { item: TechniqueList; isSubscribed?: boolean }) => (

@@ -16,6 +16,7 @@ import { FeatureSuggestionLink } from '../components/FeatureSuggestionLink';
 import { ProfileButton } from '../components/ProfileButton';
 import { BELT_COLORS } from '../data/belts';
 import { getRequirementsByBelt, getRequirementsByBeltAndType } from '../data/requirements';
+import { adaptAndFilterTechniques, adaptTechniquesForBelt } from '../utils/techniqueAdapter';
 import { TechniqueType } from '../types';
 
 const TECHNIQUE_TYPES: TechniqueType[] = ['finalizacoes', 'quedas', 'raspagens', 'passagens', 'outros'];
@@ -29,6 +30,8 @@ export const HomeScreen: React.FC = () => {
     setSelectedBelt,
     selectedTechniqueTab,
     setSelectedTechniqueTab,
+    activeListId,
+    techniquesCache,
     progress,
     toggleRequirement,
     getRequirementProgress,
@@ -40,6 +43,12 @@ export const HomeScreen: React.FC = () => {
     removePhoto,
     resetBeltProgress,
   } = useStore();
+
+  // Determine if we're using legacy hardcoded data or API list
+  const isLegacyMode = activeListId === null;
+
+  // Get the progress key for the current list
+  const progressKey = isLegacyMode ? selectedBelt : activeListId;
 
   const belt = BELT_COLORS[selectedBelt];
 
@@ -95,15 +104,26 @@ export const HomeScreen: React.FC = () => {
   const phonePadding = 20;
 
   // Get requirements for current belt AND technique type
-  const requirements = useMemo(
-    () => getRequirementsByBeltAndType(selectedBelt, selectedTechniqueTab),
-    [selectedBelt, selectedTechniqueTab]
-  );
+  // Dual-mode: use hardcoded data in legacy mode, API data when a list is selected
+  const requirements = useMemo(() => {
+    if (isLegacyMode) {
+      // Legacy mode: use hardcoded requirements
+      return getRequirementsByBeltAndType(selectedBelt, selectedTechniqueTab);
+    }
+
+    // API mode: use cached techniques from selected list
+    const cached = techniquesCache[activeListId];
+    if (!cached?.techniques) {
+      return [];
+    }
+
+    return adaptAndFilterTechniques(cached.techniques, selectedBelt, selectedTechniqueTab);
+  }, [isLegacyMode, activeListId, techniquesCache, selectedBelt, selectedTechniqueTab]);
 
   // Calculate progress for current technique type only (per-tab progress)
   const { completed, total, percentage } = useMemo(() => {
-    const beltProgress = progress[selectedBelt] || {};
-    const completedCount = requirements.filter(req => beltProgress[req.id]?.completed).length;
+    const listProgress = progress[progressKey] || {};
+    const completedCount = requirements.filter(req => listProgress[req.id]?.completed).length;
     const totalCount = requirements.length;
     const pct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
     return {
@@ -111,17 +131,23 @@ export const HomeScreen: React.FC = () => {
       total: totalCount,
       percentage: pct,
     };
-  }, [progress, selectedBelt, requirements]);
+  }, [progress, progressKey, requirements]);
 
   // Calculate overall belt progress (for completion check)
   const overallProgress = useMemo(() => {
-    const allRequirements = getRequirementsByBelt(selectedBelt);
-    const beltProgress = progress[selectedBelt] || {};
-    const completedCount = Object.values(beltProgress).filter(p => p.completed).length;
+    // Get all requirements for current belt
+    const allRequirements = isLegacyMode
+      ? getRequirementsByBelt(selectedBelt)
+      : techniquesCache[activeListId]?.techniques
+        ? adaptTechniquesForBelt(techniquesCache[activeListId].techniques, selectedBelt)
+        : [];
+
+    const listProgress = progress[progressKey] || {};
+    const completedCount = allRequirements.filter(req => listProgress[req.id]?.completed).length;
     const totalCount = allRequirements.length;
     const pct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
     return { completed: completedCount, total: totalCount, percentage: pct };
-  }, [progress, selectedBelt]);
+  }, [progress, progressKey, isLegacyMode, activeListId, techniquesCache, selectedBelt]);
 
   // Show completion screen if 100% overall belt progress
   if (overallProgress.percentage === 100 && overallProgress.total > 0) {
@@ -182,20 +208,20 @@ export const HomeScreen: React.FC = () => {
               data={requirements}
               keyExtractor={(item) => item.id}
               renderItem={({ item }) => {
-                const reqProgress = getRequirementProgress(selectedBelt, item.id);
+                const reqProgress = getRequirementProgress(progressKey as any, item.id);
                 const isItemExpanded = expandedRequirements.has(item.id);
 
                 return (
                   <RequirementItem
                     requirement={item}
                     progress={reqProgress}
-                    onToggle={() => toggleRequirement(selectedBelt, item.id)}
+                    onToggle={() => toggleRequirement(progressKey as any, item.id)}
                     onExpand={() => toggleExpanded(item.id)}
                     isExpanded={isItemExpanded}
-                    onUpdateNote={(note) => updateNote(selectedBelt, item.id, note)}
-                    onUpdateUrl={(url) => updateMediaUrl(selectedBelt, item.id, url)}
-                    onUpdatePhoto={(photoUri) => updatePhoto(selectedBelt, item.id, photoUri)}
-                    onRemovePhoto={() => removePhoto(selectedBelt, item.id)}
+                    onUpdateNote={(note) => updateNote(progressKey as any, item.id, note)}
+                    onUpdateUrl={(url) => updateMediaUrl(progressKey as any, item.id, url)}
+                    onUpdatePhoto={(photoUri) => updatePhoto(progressKey as any, item.id, photoUri)}
+                    onRemovePhoto={() => removePhoto(progressKey as any, item.id)}
                   />
                 );
               }}
@@ -208,7 +234,7 @@ export const HomeScreen: React.FC = () => {
                 <>
                   <ResetBeltButton
                     beltName={belt.displayName}
-                    onReset={() => resetBeltProgress(selectedBelt)}
+                    onReset={() => resetBeltProgress(progressKey as any)}
                   />
                   <FeatureSuggestionLink />
                 </>
@@ -269,20 +295,20 @@ export const HomeScreen: React.FC = () => {
         data={requirements}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
-          const reqProgress = getRequirementProgress(selectedBelt, item.id);
+          const reqProgress = getRequirementProgress(progressKey as any, item.id);
           const isItemExpanded = expandedRequirements.has(item.id);
 
           return (
             <RequirementItem
               requirement={item}
               progress={reqProgress}
-              onToggle={() => toggleRequirement(selectedBelt, item.id)}
+              onToggle={() => toggleRequirement(progressKey as any, item.id)}
               onExpand={() => toggleExpanded(item.id)}
               isExpanded={isItemExpanded}
-              onUpdateNote={(note) => updateNote(selectedBelt, item.id, note)}
-              onUpdateUrl={(url) => updateMediaUrl(selectedBelt, item.id, url)}
-              onUpdatePhoto={(photoUri) => updatePhoto(selectedBelt, item.id, photoUri)}
-              onRemovePhoto={() => removePhoto(selectedBelt, item.id)}
+              onUpdateNote={(note) => updateNote(progressKey as any, item.id, note)}
+              onUpdateUrl={(url) => updateMediaUrl(progressKey as any, item.id, url)}
+              onUpdatePhoto={(photoUri) => updatePhoto(progressKey as any, item.id, photoUri)}
+              onRemovePhoto={() => removePhoto(progressKey as any, item.id)}
             />
           );
         }}
@@ -295,7 +321,7 @@ export const HomeScreen: React.FC = () => {
           <>
             <ResetBeltButton
               beltName={belt.displayName}
-              onReset={() => resetBeltProgress(selectedBelt)}
+              onReset={() => resetBeltProgress(progressKey as any)}
             />
             <FeatureSuggestionLink />
           </>
