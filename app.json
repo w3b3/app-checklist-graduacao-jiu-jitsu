@@ -2,7 +2,7 @@
   "expo": {
     "name": "BJJ Checklist",
     "slug": "bjj-checklist",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -11,8 +11,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Permite o BJJ Checklist acessar suas fotos para documentar técnicas",
-          "cameraPermission": "Permite o BJJ Checklist acessar sua câmera para tirar fotos de técnicas"
+          "photosPermission": "Permite o BJJ Checklist acessar suas fotos para documentar t\u00e9cnicas",
+          "cameraPermission": "Permite o BJJ Checklist acessar sua c\u00e2mera para tirar fotos de t\u00e9cnicas"
         }
       ],
       "expo-file-system",
@@ -25,11 +25,11 @@
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       },
-      "buildNumber": "24"
+      "buildNumber": "25"
     },
     "android": {
       "package": "com.brothersfight.bjjchecklist",
-      "versionCode": 26,
+      "versionCode": 27,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1E40AF"
