@@ -1,0 +1,7 @@
+.build/
+.swiftpm/
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata
+DerivedData/
+.DS_Store
