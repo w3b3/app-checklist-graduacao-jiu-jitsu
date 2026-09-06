@@ -1,0 +1,603 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0707FD0513CA877FB4D4AF85 /* default_curriculum.json in Resources */ = {isa = PBXBuildFile; fileRef = CBD6B15E5D0B54493AA02828 /* default_curriculum.json */; };
+		0D41BD287671BAA995350BE5 /* ProgressEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222596B3538BCC60B368A9E0 /* ProgressEngine.swift */; };
+		12C91C14B4709C7449C7F1D8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206AE364A7957117D54E6EE3 /* ContentView.swift */; };
+		22FAA88AE5A2405E051E6B93 /* CurriculumDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F285E219EB261DDAFE182D2 /* CurriculumDecoderTests.swift */; };
+		3A42A9B762C1C96F5A98067C /* SwiftDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735A48A5AD78648D9AF7A3B2 /* SwiftDataStack.swift */; };
+		417D65C633FBA2619C9F5BD2 /* CurriculumData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B9EB0CA4513264CB3E9D0B /* CurriculumData.swift */; };
+		4B487C525872B359B8A85ADE /* TechniqueType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81C9652BBE61A4241BE8993 /* TechniqueType.swift */; };
+		5D0939C8DA2ADF34091D8B38 /* CurriculumRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723F35AE031D5389B77E0F8D /* CurriculumRepository.swift */; };
+		5FC3C0FDA3172D16A1B645BE /* BeltSelectorBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC0F1806895E72C316377C1 /* BeltSelectorBar.swift */; };
+		781F262160EB6BEAAEFFA695 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D86EF4CEDCF97364789E5507 /* Assets.xcassets */; };
+		82E6143EB2F1203D12B5D471 /* SwiftDataPersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E9B8F0374AEBE17250EBFB /* SwiftDataPersistenceTests.swift */; };
+		855877647AD690B6EA0D6679 /* BeltProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67F090B99CE6C695B53273D /* BeltProgressBar.swift */; };
+		856063941722DDC3E8A55E6E /* BeltCompletionModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC54A5291CEE478F195D9E92 /* BeltCompletionModal.swift */; };
+		8A52B6A9148905F959A9C0F1 /* TechniqueRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A51FAB87E159C68C00E962 /* TechniqueRowView.swift */; };
+		99BA44463C218718CADB5C67 /* CategoryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4FB68264C2FF4D30434B2E /* CategoryHeaderView.swift */; };
+		A05DF0C78211DF9F6E53FAFB /* BJJChecklistApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0DD442AFD08825AB83941F0 /* BJJChecklistApp.swift */; };
+		A476531C697807AF4C24164B /* BeltProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D15B49EE11CEDE306B7ED7E /* BeltProgress.swift */; };
+		B0BB2295669D007783031047 /* ProgressEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52187AE240E2DCD68C2B61CA /* ProgressEngineTests.swift */; };
+		BAB4E9511EE58F5510B28D93 /* String+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A05968E8666B0B287453C8 /* String+Search.swift */; };
+		BDE65A88EE2EC3D823B2EEF7 /* Belt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391732CE5FD9ECD452FE7BA9 /* Belt.swift */; };
+		C1288606AEF900F18F003781 /* Gym.swift in Sources */ = {isa = PBXBuildFile; fileRef = B888386EA70D5B200E076222 /* Gym.swift */; };
+		CB2109CE20CED0EFB83E3F46 /* DomainModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE5F5F6A77717697B27A7C45 /* DomainModelTests.swift */; };
+		CE9B470B3E8A5B75A6BF294A /* ChecklistHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23B3837D44B56C1D573FC62 /* ChecklistHomeView.swift */; };
+		D2873FB074E5088E87E86B8A /* DetailSheetUrlValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F676CE387CB91005880194 /* DetailSheetUrlValidationTests.swift */; };
+		DA042215542B86F0463E3509 /* ProgressItemEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C70B0C14C47788525ED6F93 /* ProgressItemEntity.swift */; };
+		E188E7F22D064FD0DFA4134E /* CategoryProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18584C092B333B3FDB94A71A /* CategoryProgress.swift */; };
+		E827B9FF5D254FB21C0C61EF /* HapticFeedbackService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28AB82E8A5622A57C971F15 /* HapticFeedbackService.swift */; };
+		F0B63EB8CFD0E88F80B22975 /* Color+Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2C283C50B8BFB8B196C7C9 /* Color+Platform.swift */; };
+		F622377B95CE08280685F724 /* TechniqueDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0303129ACA68A99208F8ED /* TechniqueDetailSheet.swift */; };
+		FD656F7411F1B0C711FF246E /* TechniqueRequirement.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDF5EACE463F95DCDAE0FDD /* TechniqueRequirement.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		57F7BF089DE5958F4813774D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1863FFAC8AEC43058958DCA8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A791B7E9F54B0877A2AF5374;
+			remoteInfo = BJJChecklist;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		03E9B8F0374AEBE17250EBFB /* SwiftDataPersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataPersistenceTests.swift; sourceTree = "<group>"; };
+		0D2C283C50B8BFB8B196C7C9 /* Color+Platform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Platform.swift"; sourceTree = "<group>"; };
+		18584C092B333B3FDB94A71A /* CategoryProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryProgress.swift; sourceTree = "<group>"; };
+		1D15B49EE11CEDE306B7ED7E /* BeltProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeltProgress.swift; sourceTree = "<group>"; };
+		1F285E219EB261DDAFE182D2 /* CurriculumDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurriculumDecoderTests.swift; sourceTree = "<group>"; };
+		206AE364A7957117D54E6EE3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		222596B3538BCC60B368A9E0 /* ProgressEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressEngine.swift; sourceTree = "<group>"; };
+		2F4FB68264C2FF4D30434B2E /* CategoryHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryHeaderView.swift; sourceTree = "<group>"; };
+		391732CE5FD9ECD452FE7BA9 /* Belt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Belt.swift; sourceTree = "<group>"; };
+		3A0303129ACA68A99208F8ED /* TechniqueDetailSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechniqueDetailSheet.swift; sourceTree = "<group>"; };
+		439E3F54FEAC9A4B1901B618 /* BJJChecklistTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = BJJChecklistTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		52187AE240E2DCD68C2B61CA /* ProgressEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressEngineTests.swift; sourceTree = "<group>"; };
+		6BC0F1806895E72C316377C1 /* BeltSelectorBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeltSelectorBar.swift; sourceTree = "<group>"; };
+		723F35AE031D5389B77E0F8D /* CurriculumRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurriculumRepository.swift; sourceTree = "<group>"; };
+		735A48A5AD78648D9AF7A3B2 /* SwiftDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataStack.swift; sourceTree = "<group>"; };
+		7C70B0C14C47788525ED6F93 /* ProgressItemEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressItemEntity.swift; sourceTree = "<group>"; };
+		88A51FAB87E159C68C00E962 /* TechniqueRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechniqueRowView.swift; sourceTree = "<group>"; };
+		A0DD442AFD08825AB83941F0 /* BJJChecklistApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BJJChecklistApp.swift; sourceTree = "<group>"; };
+		A7B9EB0CA4513264CB3E9D0B /* CurriculumData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurriculumData.swift; sourceTree = "<group>"; };
+		A81C9652BBE61A4241BE8993 /* TechniqueType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechniqueType.swift; sourceTree = "<group>"; };
+		B67F090B99CE6C695B53273D /* BeltProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeltProgressBar.swift; sourceTree = "<group>"; };
+		B888386EA70D5B200E076222 /* Gym.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gym.swift; sourceTree = "<group>"; };
+		BE5F5F6A77717697B27A7C45 /* DomainModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainModelTests.swift; sourceTree = "<group>"; };
+		C4A05968E8666B0B287453C8 /* String+Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Search.swift"; sourceTree = "<group>"; };
+		CBD6B15E5D0B54493AA02828 /* default_curriculum.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = default_curriculum.json; sourceTree = "<group>"; };
+		D86EF4CEDCF97364789E5507 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DC54A5291CEE478F195D9E92 /* BeltCompletionModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeltCompletionModal.swift; sourceTree = "<group>"; };
+		DFDF5EACE463F95DCDAE0FDD /* TechniqueRequirement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TechniqueRequirement.swift; sourceTree = "<group>"; };
+		E23B3837D44B56C1D573FC62 /* ChecklistHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistHomeView.swift; sourceTree = "<group>"; };
+		E28AB82E8A5622A57C971F15 /* HapticFeedbackService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticFeedbackService.swift; sourceTree = "<group>"; };
+		E429E598118CACDE5BBA5256 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E5585ED0AEACB11EE2770608 /* BJJChecklist.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BJJChecklist.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F2F676CE387CB91005880194 /* DetailSheetUrlValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailSheetUrlValidationTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		179D3CB3F8520F780643C70A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				E28AB82E8A5622A57C971F15 /* HapticFeedbackService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		25EB353534455E6868099D45 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E23B3837D44B56C1D573FC62 /* ChecklistHomeView.swift */,
+				7EB884F424AF9E9C6DA3A496 /* Celebration */,
+				F706603375AFEB19BBFAE96D /* Components */,
+				506A586E2FA0729ABF3B8DE6 /* Detail */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3C6D246D504727D50D9226F6 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D86EF4CEDCF97364789E5507 /* Assets.xcassets */,
+				CBD6B15E5D0B54493AA02828 /* default_curriculum.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		4F340DEB4799DE22FE1E1241 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				391732CE5FD9ECD452FE7BA9 /* Belt.swift */,
+				0D2C283C50B8BFB8B196C7C9 /* Color+Platform.swift */,
+				A7B9EB0CA4513264CB3E9D0B /* CurriculumData.swift */,
+				B888386EA70D5B200E076222 /* Gym.swift */,
+				DFDF5EACE463F95DCDAE0FDD /* TechniqueRequirement.swift */,
+				A81C9652BBE61A4241BE8993 /* TechniqueType.swift */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		506A586E2FA0729ABF3B8DE6 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				3A0303129ACA68A99208F8ED /* TechniqueDetailSheet.swift */,
+			);
+			path = Detail;
+			sourceTree = "<group>";
+		};
+		69AF5517E125DEAF28221DA1 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				723F35AE031D5389B77E0F8D /* CurriculumRepository.swift */,
+				7C70B0C14C47788525ED6F93 /* ProgressItemEntity.swift */,
+				735A48A5AD78648D9AF7A3B2 /* SwiftDataStack.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		7EB884F424AF9E9C6DA3A496 /* Celebration */ = {
+			isa = PBXGroup;
+			children = (
+				DC54A5291CEE478F195D9E92 /* BeltCompletionModal.swift */,
+			);
+			path = Celebration;
+			sourceTree = "<group>";
+		};
+		A766302AA112D4BD6168113F /* BJJChecklistTests */ = {
+			isa = PBXGroup;
+			children = (
+				1F285E219EB261DDAFE182D2 /* CurriculumDecoderTests.swift */,
+				F2F676CE387CB91005880194 /* DetailSheetUrlValidationTests.swift */,
+				BE5F5F6A77717697B27A7C45 /* DomainModelTests.swift */,
+				52187AE240E2DCD68C2B61CA /* ProgressEngineTests.swift */,
+				03E9B8F0374AEBE17250EBFB /* SwiftDataPersistenceTests.swift */,
+			);
+			name = BJJChecklistTests;
+			path = Tests/BJJChecklistTests;
+			sourceTree = "<group>";
+		};
+		A9FD7C2FAF9139534D0D7304 = {
+			isa = PBXGroup;
+			children = (
+				CB21921C67827523F05618C0 /* BJJChecklist */,
+				F5CF0C8EDE9CC5B77FB321DD /* BJJChecklistApp */,
+				A766302AA112D4BD6168113F /* BJJChecklistTests */,
+				E123792E358D47572C13262D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CB21921C67827523F05618C0 /* BJJChecklist */ = {
+			isa = PBXGroup;
+			children = (
+				4F340DEB4799DE22FE1E1241 /* Domain */,
+				F2D1D0D76E8F2F425FA4BC2C /* Engine */,
+				69AF5517E125DEAF28221DA1 /* Persistence */,
+				3C6D246D504727D50D9226F6 /* Resources */,
+				179D3CB3F8520F780643C70A /* Services */,
+				25EB353534455E6868099D45 /* Views */,
+			);
+			name = BJJChecklist;
+			path = Sources/BJJChecklist;
+			sourceTree = "<group>";
+		};
+		E123792E358D47572C13262D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E5585ED0AEACB11EE2770608 /* BJJChecklist.app */,
+				439E3F54FEAC9A4B1901B618 /* BJJChecklistTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F2D1D0D76E8F2F425FA4BC2C /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				1D15B49EE11CEDE306B7ED7E /* BeltProgress.swift */,
+				18584C092B333B3FDB94A71A /* CategoryProgress.swift */,
+				222596B3538BCC60B368A9E0 /* ProgressEngine.swift */,
+				C4A05968E8666B0B287453C8 /* String+Search.swift */,
+			);
+			path = Engine;
+			sourceTree = "<group>";
+		};
+		F5CF0C8EDE9CC5B77FB321DD /* BJJChecklistApp */ = {
+			isa = PBXGroup;
+			children = (
+				A0DD442AFD08825AB83941F0 /* BJJChecklistApp.swift */,
+				206AE364A7957117D54E6EE3 /* ContentView.swift */,
+				E429E598118CACDE5BBA5256 /* Info.plist */,
+			);
+			name = BJJChecklistApp;
+			path = Sources/BJJChecklistApp;
+			sourceTree = "<group>";
+		};
+		F706603375AFEB19BBFAE96D /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				B67F090B99CE6C695B53273D /* BeltProgressBar.swift */,
+				6BC0F1806895E72C316377C1 /* BeltSelectorBar.swift */,
+				2F4FB68264C2FF4D30434B2E /* CategoryHeaderView.swift */,
+				88A51FAB87E159C68C00E962 /* TechniqueRowView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3A0D7C33FE8C8ADFCEC79940 /* BJJChecklistTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B79F3056CCF173DE623DD79E /* Build configuration list for PBXNativeTarget "BJJChecklistTests" */;
+			buildPhases = (
+				160149D949A5E524C52071D5 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				629468A228917EEA817BAB91 /* PBXTargetDependency */,
+			);
+			name = BJJChecklistTests;
+			packageProductDependencies = (
+			);
+			productName = BJJChecklistTests;
+			productReference = 439E3F54FEAC9A4B1901B618 /* BJJChecklistTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A791B7E9F54B0877A2AF5374 /* BJJChecklist */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 32289BE9887281FE8994E652 /* Build configuration list for PBXNativeTarget "BJJChecklist" */;
+			buildPhases = (
+				75DD34DEA7E53C028086B545 /* Sources */,
+				83EF13EEC9B73409CEE529B3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BJJChecklist;
+			packageProductDependencies = (
+			);
+			productName = BJJChecklist;
+			productReference = E5585ED0AEACB11EE2770608 /* BJJChecklist.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1863FFAC8AEC43058958DCA8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					A791B7E9F54B0877A2AF5374 = {
+						DevelopmentTeam = Q39UF8B7S5;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 8B38A02644EF1BD7F7AB0FBF /* Build configuration list for PBXProject "BJJChecklist" */;
+			developmentRegion = "pt-BR";
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				"pt-BR",
+			);
+			mainGroup = A9FD7C2FAF9139534D0D7304;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = E123792E358D47572C13262D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A791B7E9F54B0877A2AF5374 /* BJJChecklist */,
+				3A0D7C33FE8C8ADFCEC79940 /* BJJChecklistTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		83EF13EEC9B73409CEE529B3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				781F262160EB6BEAAEFFA695 /* Assets.xcassets in Resources */,
+				0707FD0513CA877FB4D4AF85 /* default_curriculum.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		160149D949A5E524C52071D5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				22FAA88AE5A2405E051E6B93 /* CurriculumDecoderTests.swift in Sources */,
+				D2873FB074E5088E87E86B8A /* DetailSheetUrlValidationTests.swift in Sources */,
+				CB2109CE20CED0EFB83E3F46 /* DomainModelTests.swift in Sources */,
+				B0BB2295669D007783031047 /* ProgressEngineTests.swift in Sources */,
+				82E6143EB2F1203D12B5D471 /* SwiftDataPersistenceTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		75DD34DEA7E53C028086B545 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A05DF0C78211DF9F6E53FAFB /* BJJChecklistApp.swift in Sources */,
+				BDE65A88EE2EC3D823B2EEF7 /* Belt.swift in Sources */,
+				856063941722DDC3E8A55E6E /* BeltCompletionModal.swift in Sources */,
+				A476531C697807AF4C24164B /* BeltProgress.swift in Sources */,
+				855877647AD690B6EA0D6679 /* BeltProgressBar.swift in Sources */,
+				5FC3C0FDA3172D16A1B645BE /* BeltSelectorBar.swift in Sources */,
+				99BA44463C218718CADB5C67 /* CategoryHeaderView.swift in Sources */,
+				E188E7F22D064FD0DFA4134E /* CategoryProgress.swift in Sources */,
+				CE9B470B3E8A5B75A6BF294A /* ChecklistHomeView.swift in Sources */,
+				F0B63EB8CFD0E88F80B22975 /* Color+Platform.swift in Sources */,
+				12C91C14B4709C7449C7F1D8 /* ContentView.swift in Sources */,
+				417D65C633FBA2619C9F5BD2 /* CurriculumData.swift in Sources */,
+				5D0939C8DA2ADF34091D8B38 /* CurriculumRepository.swift in Sources */,
+				C1288606AEF900F18F003781 /* Gym.swift in Sources */,
+				E827B9FF5D254FB21C0C61EF /* HapticFeedbackService.swift in Sources */,
+				0D41BD287671BAA995350BE5 /* ProgressEngine.swift in Sources */,
+				DA042215542B86F0463E3509 /* ProgressItemEntity.swift in Sources */,
+				BAB4E9511EE58F5510B28D93 /* String+Search.swift in Sources */,
+				3A42A9B762C1C96F5A98067C /* SwiftDataStack.swift in Sources */,
+				F622377B95CE08280685F724 /* TechniqueDetailSheet.swift in Sources */,
+				FD656F7411F1B0C711FF246E /* TechniqueRequirement.swift in Sources */,
+				8A52B6A9148905F959A9C0F1 /* TechniqueRowView.swift in Sources */,
+				4B487C525872B359B8A85ADE /* TechniqueType.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		629468A228917EEA817BAB91 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A791B7E9F54B0877A2AF5374 /* BJJChecklist */;
+			targetProxy = 57F7BF089DE5958F4813774D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		111D88E570C6403810E9539A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		1C1758519BC88A8EF1578C4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.brothersfight.bjjchecklist.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BJJChecklist.app/BJJChecklist";
+			};
+			name = Debug;
+		};
+		1F799B70BCFC96F3E8CF1254 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Q39UF8B7S5;
+				GENERATE_INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_FILE = Sources/BJJChecklistApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.brothersfight.bjjchecklist;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		32FADA4BCD6A3B76AEA69AE3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		51B18BABEAD30E33A5D9AF4E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Q39UF8B7S5;
+				GENERATE_INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_FILE = Sources/BJJChecklistApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.brothersfight.bjjchecklist;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		918B0A8CAF79A79106608724 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.brothersfight.bjjchecklist.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BJJChecklist.app/BJJChecklist";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		32289BE9887281FE8994E652 /* Build configuration list for PBXNativeTarget "BJJChecklist" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				51B18BABEAD30E33A5D9AF4E /* Debug */,
+				1F799B70BCFC96F3E8CF1254 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8B38A02644EF1BD7F7AB0FBF /* Build configuration list for PBXProject "BJJChecklist" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				32FADA4BCD6A3B76AEA69AE3 /* Debug */,
+				111D88E570C6403810E9539A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B79F3056CCF173DE623DD79E /* Build configuration list for PBXNativeTarget "BJJChecklistTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C1758519BC88A8EF1578C4B /* Debug */,
+				918B0A8CAF79A79106608724 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1863FFAC8AEC43058958DCA8 /* Project object */;
+}
