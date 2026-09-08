@@ -1,105 +1,51 @@
-# App Store Listing Content
+# App Store & Google Play Listing Content - Revamp (PT-BR)
 
-## App Name
-**BJJ Checklist - Graduação** (or "BJJ Belt Progress")
+## App Name (Nome do App)
+**Graduação Jiu Jitsu** (ou "Checklist Graduação Jiu Jitsu")
 
-## Subtitle (iOS - 30 chars max)
-Track your Jiu-Jitsu progress
+## Subtitle / Subtítulo (iOS - 30 caracteres max)
+Seu checklist para a graduação
 
-## Short Description (Google Play - 80 chars)
-Track belt requirements and progress for Brazilian Jiu-Jitsu training at Brothers Fight
+## Short Description / Resumo (Google Play - Max 80 caracteres)
+Chegue no dia do exame de faixa preparado, confiante e sem surpresas! 🥋✨
 
-## Full Description
+## Full Description / Descrição Completa (Google Play & App Store)
 
-### Portuguese (BR):
+### 🥋 O seu companheiro de treino rumo à próxima faixa!
 
-**Checklist Completo de Graduação para Jiu-Jitsu Brasileiro**
+Chegar no dia do exame de graduação com aquele "frio na barriga" é super normal, mas você não precisa passar por dúvidas do tipo *"será que esqueci alguma posição?"*. 
 
-Acompanhe seu progresso de treinamento com o checklist oficial da academia Brothers Fight. Organize seus requisitos de graduação para faixas azul, roxa, marrom e preta.
-
-**Funcionalidades:**
-✅ Requisitos detalhados para cada faixa (Azul, Roxa, Marrom, Preta)
-✅ Marque técnicas conforme você aprende
-✅ Adicione notas pessoais e links de vídeos
-✅ Barra de progresso em tempo real
-✅ Celebração ao completar 100% dos requisitos
-✅ Compartilhe sua conquista nas redes sociais
-✅ Funciona 100% offline - sem internet necessária
-✅ Dados salvos automaticamente
-
-**Para Quem:**
-- Estudantes de Brazilian Jiu-Jitsu
-- Praticantes preparando para exames de faixa
-- Academias que querem organizar requisitos de graduação
-
-**Privacidade Garantida:**
-Todos os seus dados ficam apenas no seu celular. Não coletamos, enviamos ou compartilhamos nenhuma informação.
-
-**Desenvolvido para Brothers Fight Academy**
+O **Graduação Jiu Jitsu** foi feito especialmente para alunos, praticantes do dia a dia, jovens e adultos que conciliam o tatame com a rotina de trabalho ou estudos. Aqui, o objetivo é simples: **ajudar você a evoluir no seu ritmo e chegar na mesa de avaliação com a cabeça tranquila e a confiança no topo!**
 
 ---
 
-### English:
+### 🌟 Por que você vai amar usar no seu dia a dia:
 
-**Complete Belt Progression Checklist for Brazilian Jiu-Jitsu**
+- **📋 Requisitos Transparentes e Organizados:** Veja exatamente o que é cobrado em cada graduação (Faixa Azul, Roxa, Marrom e Preta).
+- **📝 Suas Anotações Pessoais:** Sabe aquele detalhe da pegada que o professor passou e você não quer esquecer? Salve observações em cada técnica!
+- **🎬 Seus Vídeos de Apoio:** Adicione links de vídeos (YouTube, Instagram) para rever a execução sempre que quiser dar aquela estudada antes do treino.
+- **📊 Progresso Visual Confortável:** Acompanhe a sua evolução em tempo real e sinta a satisfação de ver a barra de progresso avançar.
+- **📱 100% Offline e Sem Complicação:** Funciona direto no seu celular mesmo sem internet no vestiário ou no tatame. Sem cadastro chato e sem anúncios.
+- **🎉 Celebração de Conquista:** Chegou nos 100%? Comemore essa vitória merecida e compartilhe com seus parceiros de treino!
+- **🥋 Parceria Tatame0:** Projeto mantido com carinho junto ao tatame0.com para fortalecer a comunidade do Jiu-Jitsu.
 
-Track your training progress with the official Brothers Fight academy checklist. Organize your graduation requirements for blue, purple, brown, and black belts.
+---
 
-**Features:**
-✅ Detailed requirements for each belt (Blue, Purple, Brown, Black)
-✅ Check off techniques as you learn them
-✅ Add personal notes and video links
-✅ Real-time progress tracking
-✅ Celebrate when you hit 100% completion
-✅ Share your achievement on social media
-✅ Works 100% offline - no internet required
-✅ Automatic data saving
+### 💚 Feito para você que:
+- Treina duro, gosta de se organizar e quer sentir segurança no seu aprendizado.
+- Quer lembrar o nome e o momento certo de cada raspagem, passagem ou saída.
+- Valoriza a jornada do Jiu-Jitsu sem a pressão da competição profissional.
 
-**Perfect For:**
-- Brazilian Jiu-Jitsu students
-- Practitioners preparing for belt exams
-- Gyms organizing graduation requirements
+**Baixe agora, organize suas posições e vá para o exame com a certeza de dever cumprido! Oss! 🥋**
 
-**Privacy First:**
-All your data stays on your phone only. We don't collect, transmit, or share any information.
+---
 
-**Built for Brothers Fight Academy**
+## Technical & Keywords (Palavras-chave)
+`jiu jitsu, graduação jiu jitsu, exame de faixa, checklist jiu jitsu, tatame0, treino jiu jitsu, faixa azul, faixa roxa, faixa marrom, faixa preta, posições jiu jitsu`
 
-## Keywords (iOS - comma separated, max 100 chars)
-bjj,jiu jitsu,brazilian jiu jitsu,belt,training,martial arts,checklist,progress,graduation,academy
-
-## Category
-- **iOS**: Health & Fitness (or Sports)
-- **Android**: Health & Fitness
-
-## Age Rating
-- **iOS**: 4+
-- **Android**: Everyone
-
-## Support URL
-https://github.com/yourusername/bjj-checklist
-
-## Privacy Policy URL
-https://raw.githubusercontent.com/yourusername/bjj-checklist/main/PRIVACY_POLICY.md
-
-## Screenshots Needed (Take these after testing on your phone)
-
-### iPhone (Required sizes):
-1. 6.7" (iPhone 14 Pro Max) - 1290 x 2796 px
-2. 6.5" (iPhone 11 Pro Max) - 1242 x 2688 px
-
-### Android:
-1. Phone - 1080 x 1920 px minimum
-
-### What to Screenshot:
-1. **Home screen** - Showing belt tabs and progress bar
-2. **Checklist view** - Expanded category with requirements
-3. **Progress tracking** - Bar showing completion percentage
-4. **Completion screen** - 100% celebration view
-5. **Notes feature** - Requirement with note added
-
-## Promotional Text (iOS - 170 chars)
-Track every technique required for your next BJJ belt. Stay organized, motivated, and ready for your graduation exam with this offline-first training companion.
-
-## What's New (For updates)
-Initial release - Complete belt progression tracker for Brazilian Jiu-Jitsu practitioners.
+## Release Notes / O Que Há de Novo (v2.0.2)
+🎉 **Nova versão 100% nativa!**
+- Reconstrução completa em Kotlin e Jetpack Compose com suporte ao Android 15.
+- Navegação fluida, visual renovado e responsivo.
+- Feedback direto integrado.
+- Integração com Firebase Crashlytics para máxima estabilidade.
