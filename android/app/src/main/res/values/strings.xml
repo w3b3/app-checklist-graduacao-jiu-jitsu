@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Graduação Jiu Jitsu</string>
+    <string name="belt_azul">Faixa Azul</string>
+    <string name="belt_roxa">Faixa Roxa</string>
+    <string name="belt_marrom">Faixa Marrom</string>
+    <string name="belt_preta">Faixa Preta</string>
+    <string name="progress_label">Seu Progresso</string>
+    <string name="reset_belt">Recomeçar Faixa</string>
+    <string name="reset_confirm_title">Recomeçar esta faixa?</string>
+    <string name="reset_confirm_message">Sem problemas! Vamos zerar as marcações desta faixa para você praticar tudo do zero. Quer continuar?</string>
+    <string name="reset_confirm_yes">Sim, recomeçar</string>
+    <string name="cancel">Agora não</string>
+    <string name="add_note">Minhas anotações</string>
+    <string name="add_url">Vídeo de referência</string>
+    <string name="note_hint">Escreva seus macetes, detalhes da pegada ou lembretes do treino...</string>
+    <string name="url_hint">https://youtube.com/watch?...</string>
+    <string name="save">Salvar com carinho</string>
+    <string name="completion_title">Sensacional! Mandou muito bem! 🥋✨</string>
+    <string name="completion_message">Você concluiu todos os detalhes da %1$s! Pode ir para o exame de graduação de cabeça erguida e com a confiança no topo!</string>
+    <string name="share_text">Requisitos da %1$s finalizados com sucesso! Treino pago, mente tranquila e pronto pro exame de faixa! 🥋🔥 Descubra mais em https://tatame0.com?utm_source=bjj_checklist_app&amp;utm_medium=completion</string>
+    <string name="share_title">Comemorar com a galera</string>
+    <string name="open_url">Ver vídeo de apoio</string>
+</resources>
