@@ -6,6 +6,8 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.dagger.hilt.android")
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
     kotlin("kapt")
 }
 
@@ -22,8 +24,8 @@ android {
         applicationId = "com.brothersfight.bjjchecklist"
         minSdk = 24
         targetSdk = 36
-        versionCode = 203
-        versionName = "2.0.0"
+        versionCode = 206
+        versionName = "2.0.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
     }
@@ -99,6 +101,11 @@ dependencies {
 
     // Kotlin Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
+    // Firebase BoM & Crashlytics
+    val firebaseBom = platform("com.google.firebase:firebase-bom:33.10.0")
+    implementation(firebaseBom)
+    implementation("com.google.firebase:firebase-crashlytics")
 
     // Testing
     testImplementation("junit:junit:4.13.2")
