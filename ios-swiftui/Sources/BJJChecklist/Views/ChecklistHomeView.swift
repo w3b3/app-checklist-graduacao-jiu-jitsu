@@ -54,7 +54,7 @@ public struct ChecklistHomeView: View {
                 // Techniques section list
                 techniquesList
             }
-            .navigationTitle("Checklist de Graduação")
+            .navigationTitle("Minha Próxima Faixa")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             #endif
@@ -101,7 +101,7 @@ public struct ChecklistHomeView: View {
                     gymOfflineHeader
                         .padding(.top, 16)
 
-                    Text("Faixas de Graduação")
+                    Text("Seu progresso por faixa")
                         .font(.headline)
                         .foregroundColor(.primary)
 
@@ -219,7 +219,7 @@ public struct ChecklistHomeView: View {
                     techniquesList
                 }
             }
-            .navigationTitle("Checklist de Graduação")
+            .navigationTitle("Minha Próxima Faixa")
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             #endif
@@ -344,8 +344,7 @@ public struct ChecklistHomeView: View {
         if let belt = engine.celebrationBelt ?? Belt.defaultBelts.first(where: { $0.id == engine.selectedBelt.id }) {
             BeltCompletionModal(
                 belt: belt,
-                totalCount: engine.progress(for: belt).totalCount,
-                gymName: engine.activeGym.name
+                totalCount: engine.progress(for: belt).totalCount
             )
         }
     }

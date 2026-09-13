@@ -20,8 +20,8 @@ public struct Gym: Identifiable, Codable, Hashable, Sendable {
 
     public static let defaultGym = Gym(
         id: "default",
-        name: "Curriculo Padrao (Brothers Fight)",
+        name: "Currículo Padrão",
         isDefault: true,
-        academyDescription: "Checklist padrao offline de graduacao"
+        academyDescription: "Seu plano de progresso faixa a faixa."
     )
 }

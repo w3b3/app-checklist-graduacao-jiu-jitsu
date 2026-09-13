@@ -4,12 +4,10 @@ public struct BeltCompletionModal: View {
     @Environment(\.dismiss) private var dismiss
     let belt: Belt
     let totalCount: Int
-    let gymName: String
 
-    public init(belt: Belt, totalCount: Int, gymName: String) {
+    public init(belt: Belt, totalCount: Int) {
         self.belt = belt
         self.totalCount = totalCount
-        self.gymName = gymName
     }
 
     public var body: some View {
@@ -40,7 +38,7 @@ public struct BeltCompletionModal: View {
                     .font(.system(size: 22, weight: .bold))
                     .foregroundColor(belt.color)
 
-                Text("Você completou com sucesso todas as " + String(totalCount) + " técnicas requeridas no currículo da academia " + gymName + ".")
+                Text("Você concluiu todas as " + String(totalCount) + " técnicas desta faixa. Continue treinando: sua graduação é definida pelo seu professor.")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -82,7 +80,7 @@ public struct BeltCompletionModal: View {
             // Actions
             VStack(spacing: 12) {
                 ShareLink(
-                    item: "🥋 Completei todos os 100% dos requisitos da Faixa " + belt.name + " no Checklist de Graduação BJJ da " + gymName + "! 🔥 OSS!"
+                    item: "🥋 Completei meu checklist da Faixa " + belt.name + " no Minha Próxima Faixa by tatame0. Seguindo firme rumo à próxima faixa! OSS!"
                 ) {
                     HStack {
                         Image(systemName: "square.and.arrow.up")

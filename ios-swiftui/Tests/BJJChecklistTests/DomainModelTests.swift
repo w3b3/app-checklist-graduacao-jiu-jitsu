@@ -29,7 +29,8 @@ final class DomainModelTests: XCTestCase {
         let gym = Gym.defaultGym
         XCTAssertEqual(gym.id, "default")
         XCTAssertTrue(gym.isDefault)
-        XCTAssertTrue(gym.name.contains("Brothers Fight"))
+        XCTAssertEqual(gym.name, "Currículo Padrão")
+        XCTAssertEqual(gym.academyDescription, "Seu plano de progresso faixa a faixa.")
     }
 
     func testTechniqueTypeProperties() {
