@@ -1,39 +1,15 @@
-<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background gradient with BJJ blue -->
-  <defs>
-    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1E40AF;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#1E3A8A;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="beltGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#1E40AF;stop-opacity:1" />
-      <stop offset="25%" style="stop-color:#7C3AED;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#92400E;stop-opacity:1" />
-      <stop offset="75%" style="stop-color:#1F2937;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#1E40AF;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-
-  <!-- Background -->
-  <rect width="1024" height="1024" fill="url(#bgGradient)" rx="180"/>
-
-  <!-- Belt shape -->
-  <rect x="162" y="462" width="700" height="100" fill="url(#beltGradient)" rx="20"/>
-
-  <!-- Belt knot -->
-  <circle cx="512" cy="512" r="80" fill="#1F2937" opacity="0.9"/>
-  <circle cx="512" cy="512" r="60" fill="url(#beltGradient)"/>
-
-  <!-- BJJ text -->
-  <text x="512" y="370" font-family="Arial, sans-serif" font-size="160" font-weight="bold" fill="white" text-anchor="middle">BJJ</text>
-
-  <!-- Checklist icon - checkmarks -->
-  <g transform="translate(512, 700)">
-    <!-- Check 1 -->
-    <path d="M -80,-20 L -65,-5 L -40,-30" stroke="white" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <!-- Check 2 -->
-    <path d="M -10,-20 L 5,-5 L 30,-30" stroke="white" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <!-- Check 3 -->
-    <path d="M 60,-20 L 75,-5 L 100,-30" stroke="white" stroke-width="12" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title description">
+  <title id="title">Minha Próxima Faixa by tatame0</title>
+  <desc id="description">Tatame0 red mat grid with a tied white jiu-jitsu belt and two red rank stripes in the black center tile.</desc>
+  <rect width="1024" height="1024" fill="#e5121f"/>
+  <path d="M256 0v1024M512 0v1024M768 0v1024M0 256h1024M0 512h1024M0 768h1024" fill="none" stroke="#fff" stroke-width="48"/>
+  <rect x="302" y="302" width="420" height="420" rx="98" fill="#0a0a0a"/>
+  <!-- A tied belt reads as graduation even at home-screen size. -->
+  <rect x="362" y="460" width="300" height="74" rx="12" fill="#fff"/>
+  <path d="M470 468 512 434 554 468 542 536 512 558 482 536Z" fill="#fff"/>
+  <path d="M478 519 494 540 468 646 428 638Z" fill="#fff"/>
+  <path d="M546 519 530 540 556 646 596 638Z" fill="#fff"/>
+  <path d="m512 468 26 25-26 27-26-27Z" fill="#e5121f"/>
+  <!-- Two stripes on the belt's rank bar distinguish this from a generic ribbon. -->
+  <path d="M603 460v74M630 460v74" stroke="#e5121f" stroke-width="12"/>
 </svg>
