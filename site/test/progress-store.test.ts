@@ -49,3 +49,11 @@ test('resetting a belt clears only that belt', () => {
   assert.deepEqual(s.get('azul', 'a'), { completed: false, note: '', mediaUrl: '' });
   assert.equal(s.get('roxa', 'r').completed, true);
 });
+
+test('percent ignores completed ids that are no longer in the belt', () => {
+  const s = fresh();
+  s.toggle('azul', 'a');
+  s.toggle('azul', 'removed-later');
+  assert.equal(s.percent('azul', 1, ['a']), 100);
+  assert.equal(s.completedCount('azul', ['a']), 1);
+});

@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { buildRequirementsData } from '../scripts/build-requirements-data.ts';
+import { buildRequirementsData } from '../scripts/requirements-data.ts';
 
 const swift = JSON.parse(
   readFileSync(new URL('../../ios-swiftui/Sources/BJJChecklist/Resources/default_curriculum.json', import.meta.url), 'utf8'),
@@ -28,6 +28,20 @@ test('requirement ids are unique', () => {
 test('matches the ids in the native iOS curriculum', () => {
   const swiftIds = swift.requirements.map((r: { id: string }) => r.id).sort();
   assert.deepEqual(allItems.map((i) => i.id).sort(), swiftIds);
+});
+
+test('agrees with the native iOS curriculum on belt, category and name of every id', () => {
+  const web = new Map(
+    data.belts.flatMap((b) => b.categories.flatMap((c) => c.items.map((i) => [i.id, `${b.id}|${c.name}|${i.name}`]))),
+  );
+  const mismatches = swift.requirements
+    .map((r: { id: string; beltId: string; category: string; name: string }) => ({
+      id: r.id,
+      swift: `${r.beltId}|${r.category}|${r.name}`,
+      web: web.get(r.id),
+    }))
+    .filter((m: { swift: string; web?: string }) => m.swift !== m.web);
+  assert.deepEqual(mismatches, []);
 });
 
 test('keeps the Portuguese name and category of each requirement', () => {

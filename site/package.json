@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "tsx build.mjs",
     "test": "tsx --test test/*.test.ts"
   },
   "devDependencies": {

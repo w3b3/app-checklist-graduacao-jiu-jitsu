@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { JSDOM } from 'jsdom';
-import { buildRequirementsData } from '../scripts/build-requirements-data.ts';
+import { buildRequirementsData } from '../scripts/requirements-data.ts';
 import { createProgressStore, STORAGE_KEY } from '../src/progress-store.ts';
 import { mountChecklist } from '../src/checklist-ui.ts';
 import { memoryStorage } from './memory-storage.ts';

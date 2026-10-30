@@ -59,6 +59,9 @@ export function createProgressStore(storage: StorageLike) {
     return (state[belt][id] ??= { ...EMPTY });
   };
 
+  const completedCount = (belt: string, ids?: string[]) =>
+    Object.entries(state[belt] ?? {}).filter(([id, p]) => p.completed && (!ids || ids.includes(id))).length;
+
   return {
     get: (belt: string, id: string): RequirementProgress => ({ ...(state[belt]?.[id] ?? EMPTY) }),
     toggle(belt: string, id: string) {
@@ -74,10 +77,9 @@ export function createProgressStore(storage: StorageLike) {
       entry(belt, id).mediaUrl = mediaUrl;
       save();
     },
-    completedCount: (belt: string) => Object.values(state[belt] ?? {}).filter((p) => p.completed).length,
-    percent(belt: string, total: number) {
-      const done = Object.values(state[belt] ?? {}).filter((p) => p.completed).length;
-      return total === 0 ? 0 : Math.round((done / total) * 100);
+    completedCount,
+    percent(belt: string, total: number, ids?: string[]) {
+      return total === 0 ? 0 : Math.min(100, Math.round((completedCount(belt, ids) / total) * 100));
     },
     resetBelt(belt: string) {
       delete state[belt];
