@@ -20,6 +20,7 @@ test('page_view carries path, language, referrer host only and utm tags', () => 
   startBeacon(win, send);
   assert.equal(sent.length, 1);
   assert.ok(sent[0].startsWith('/_e?'));
+  assert.match(sent[0], /path=\/en\/checklist\/&/); // readable in the nginx log
   assert.deepEqual(q(sent[0]), { e: 'page_view', path: '/en/checklist/', lang: 'en-US', ref: 'google.com', utm_source: 'ig', utm_medium: 'bio', utm_campaign: 'oct' });
 });
 
