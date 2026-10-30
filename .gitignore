@@ -45,3 +45,6 @@ android/*.keystore
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/
+
+# site/scripts/build-site.ts is source, not build output
+!site/scripts/build-site.ts
