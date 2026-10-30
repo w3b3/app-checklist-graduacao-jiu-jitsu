@@ -46,11 +46,14 @@ function load(storage: StorageLike): State {
 export function createProgressStore(storage: StorageLike) {
   const state: State = load(storage);
 
+  let saveFailed = false;
   const save = () => {
     try {
       storage.setItem(STORAGE_KEY, JSON.stringify(state));
+      saveFailed = false;
     } catch {
-      // Private mode or full storage: keep working in memory.
+      // Private mode or full storage: keep working in memory, and let the UI say so.
+      saveFailed = true;
     }
   };
 
@@ -78,6 +81,7 @@ export function createProgressStore(storage: StorageLike) {
       save();
     },
     completedCount,
+    saveFailed: () => saveFailed,
     percent(belt: string, total: number, ids?: string[]) {
       return total === 0 ? 0 : Math.min(100, Math.round((completedCount(belt, ids) / total) * 100));
     },

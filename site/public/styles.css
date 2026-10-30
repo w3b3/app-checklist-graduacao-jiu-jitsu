@@ -59,3 +59,5 @@ details textarea, details input { display: block; width: 100%; margin-top: 0.4re
 .reset { margin-top: 0.5rem; padding: 0.6rem 1rem; font: 800 1rem var(--t-font-display); text-transform: uppercase; background: var(--t-paper); border: var(--t-border); cursor: pointer; }
 .reset:hover { background: var(--t-accent-tint); }
 :focus-visible { outline: 3px solid var(--t-accent-deep); outline-offset: 2px; }
+.save-notice { margin: 0 0 1rem; font: 700 0.8rem var(--t-font-mono); color: var(--t-accent-deep); }
+.save-notice:empty { display: none; }

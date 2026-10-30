@@ -75,3 +75,23 @@ test('reset asks first: declining keeps progress, accepting clears the belt', ()
   assert.equal(accepted.checkboxes()[0].checked, false);
   assert.equal(accepted.bar().getAttribute('aria-valuenow'), '0');
 });
+
+test('warns when the browser refuses to save, and stays quiet otherwise', () => {
+  const dom = new JSDOM('<!doctype html><main id="root"></main>');
+  const root = dom.window.document.getElementById('root')!;
+  let failing = true;
+  const flaky = {
+    getItem: () => null,
+    setItem: () => {
+      if (failing) throw new Error('quota');
+    },
+  };
+  mountChecklist(root, data, createProgressStore(flaky), { confirm: () => true });
+  const notice = () => root.querySelector('[role=status]')!;
+  assert.equal(notice().textContent, '');
+  root.querySelector<HTMLInputElement>('input[type=checkbox]')!.click();
+  assert.match(notice().textContent!, /não foi possível salvar/i);
+  failing = false;
+  root.querySelectorAll<HTMLInputElement>('input[type=checkbox]')[1].click();
+  assert.equal(notice().textContent, '');
+});
