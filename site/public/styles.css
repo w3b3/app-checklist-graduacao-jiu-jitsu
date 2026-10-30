@@ -112,3 +112,16 @@ main.prose a { color: var(--t-accent-deep); }
 .lang-switch { display: inline-flex; gap: 0.35rem; align-items: center; font: 700 0.72rem var(--t-font-mono); letter-spacing: 0.14em; color: var(--t-on-ink-dim); }
 .site-nav .lang-switch a { text-decoration: underline; }
 .lang-switch [aria-current] { color: var(--t-on-ink); border-bottom: 2px solid var(--t-accent); }
+
+/* App upsell (soft banner + belt complete) */
+.upsell-slot:empty { display: none; }
+.upsell { position: relative; margin: 0 0 1.5rem; padding: 1rem 3rem 1rem 1.1rem; background: var(--t-paper); border: var(--t-border); box-shadow: 6px 6px 0 var(--t-accent); }
+.upsell h2 { font-size: 1.5rem; margin: 0 0 0.4rem; }
+.upsell p { margin: 0 0 0.75rem; }
+.upsell .stores { margin: 0 0 0.5rem; }
+.upsell-note { font: 700 0.7rem var(--t-font-mono); letter-spacing: 0.06em; color: var(--t-muted); margin: 0; }
+.upsell-complete { background: var(--t-ink); color: var(--t-on-ink); padding-right: 1.1rem; }
+.upsell-complete .upsell-note { color: var(--t-on-ink-dim); }
+.upsell-close { position: absolute; top: 0.4rem; right: 0.4rem; width: 44px; height: 44px; font: 800 1.6rem/1 var(--t-font-display); background: transparent; color: inherit; border: 2px solid transparent; cursor: pointer; }
+.upsell-close:hover { border-color: var(--t-ink); }
+.upsell-close:focus-visible, .upsell a:focus-visible { outline: 3px solid var(--t-accent); outline-offset: 2px; }

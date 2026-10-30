@@ -12,7 +12,11 @@ async function start(el: HTMLElement) {
     const res = await fetch(labels.dataUrl);
     if (!res.ok) throw new Error(String(res.status));
     const data: RequirementsData = await res.json();
-    mountChecklist(el, data, createProgressStore(window.localStorage), { labels });
+    mountChecklist(el, data, createProgressStore(window.localStorage), {
+      labels,
+      prefs: window.localStorage,
+      track: (event, props) => (window as any).graduacaoTrack?.(event, props),
+    });
   } catch {
     el.textContent = labels.loadFailed;
   }

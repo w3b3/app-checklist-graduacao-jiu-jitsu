@@ -15,6 +15,7 @@ const langs = [
 const urlOf = (prefix: string, slug: string) => `${prefix}/${slug}`;
 const fileOf = (url: string) => (url.endsWith('/') ? url + 'index.html' : url).slice(1);
 
+const sub0 = (prefix: string, slug: string) => docs[urlOf(prefix, slug)];
 let out: string;
 const docs: Record<string, Document> = {};
 
@@ -135,6 +136,34 @@ test('no external script tags', () => {
     for (const s of doc.querySelectorAll('script')) {
       assert.ok(!/^(https?:)?\/\//.test(s.getAttribute('src') ?? ''), url);
     }
+  }
+});
+
+test('every page loads the first-party beacon and the build ships it small', () => {
+  for (const [url, doc] of Object.entries(docs)) {
+    assert.ok([...doc.querySelectorAll('script')].some((s) => s.getAttribute('src') === '/b.js'), url);
+  }
+  assert.ok(statSync(join(out, 'b.js')).size < 3000);
+});
+
+test('privacy and support say what is counted: own server, no third parties, Do Not Track', () => {
+  const expect = {
+    'pt-BR': [/contamos visitas de forma anônima/i, /nosso próprio servidor/i, /Não rastrear/, /cliques nos botões da App Store/i, /terceiros/, /nunca sai do aparelho/],
+    'en-US': [/count visits anonymously/i, /our own server/i, /Do Not Track/, /clicks on the App Store/i, /third-party/, /never leaves your device/],
+  } as const;
+  for (const l of langs) {
+    const text = sub0(l.prefix, 'privacy/').body.textContent!.replace(/\s+/g, ' ');
+    for (const re of expect[l.code as keyof typeof expect]) assert.match(text, re, `${l.code} ${re}`);
+    assert.doesNotMatch(text, /não fazemos nenhuma medição|don't measure visits at all/i);
+    assert.match(sub0(l.prefix, 'privacy/').body.textContent!, /2026/);
+    assert.match(sub0(l.prefix, 'support/').body.textContent!, l.code === 'pt-BR' ? /Medição de visitas/ : /Visit counting/);
+  }
+});
+
+test('landing store badges carry store and placement for the beacon', () => {
+  for (const l of langs) {
+    const links = [...docs[urlOf(l.prefix, '')].querySelectorAll<HTMLAnchorElement>('a[data-store]')];
+    assert.deepEqual(links.map((a) => [a.dataset.store, a.dataset.where]), [['app_store', 'hero'], ['google_play', 'hero']]);
   }
 });
 

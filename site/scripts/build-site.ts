@@ -65,6 +65,14 @@ export async function buildSite(outDir: string) {
     target: 'es2020',
     outfile: join(outDir, 'checklist/app.js'),
   });
+  await build({
+    entryPoints: [join(root, 'src/beacon-entry.ts')],
+    bundle: true,
+    minify: true,
+    format: 'iife',
+    target: 'es2020',
+    outfile: join(outDir, 'b.js'),
+  });
   cpSync(join(root, 'public'), outDir, { recursive: true });
   // Content-hashed names: a changed file gets a new URL, so no cache can serve it stale.
   const stylesHref = fingerprint(outDir, 'styles.css');

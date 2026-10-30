@@ -1,13 +1,22 @@
 import type { RequirementsData } from './types.ts';
-import { stringsFor, type Strings } from './i18n.ts';
-import type { createProgressStore } from './progress-store.ts';
+import { stringsFor, APP_STORE_URL, PLAY_URL, type Strings } from './i18n.ts';
+import type { createProgressStore, StorageLike } from './progress-store.ts';
 
 type Store = ReturnType<typeof createProgressStore>;
+
+/** UI preference (not tracking): the visitor closed the soft app banner. */
+export const UPSELL_DISMISSED_KEY = 'graduacao.upsell.dismissed.v1';
+/** Ticks (across all belts) before the soft app banner shows. */
+export const UPSELL_THRESHOLD = 5;
 
 export interface ChecklistOptions {
   confirm?: (message: string) => boolean;
   /** UI text. Defaults to Portuguese. */
   labels?: Strings;
+  /** Where UI preferences live. Defaults to localStorage when it is usable. */
+  prefs?: StorageLike;
+  /** Anonymous event sink (see beacon.ts). Defaults to doing nothing. */
+  track?: (event: string, props?: Record<string, string>) => void;
 }
 
 export function mountChecklist(root: HTMLElement, data: RequirementsData, store: Store, opts: ChecklistOptions = {}) {
@@ -15,6 +24,28 @@ export function mountChecklist(root: HTMLElement, data: RequirementsData, store:
   const LABELS = opts.labels ?? stringsFor('pt-BR');
   const confirmReset = opts.confirm ?? ((m: string) => globalThis.confirm(m));
   let selected = data.belts[0].id;
+  const track = (event: string, props?: Record<string, string>) => {
+    try {
+      opts.track?.(event, props);
+    } catch {}
+  };
+  const prefs: StorageLike | undefined = opts.prefs ?? (() => {
+    try {
+      return globalThis.localStorage;
+    } catch {
+      return undefined;
+    }
+  })();
+  const isDismissed = () => {
+    try {
+      return prefs?.getItem(UPSELL_DISMISSED_KEY) === '1';
+    } catch {
+      return false;
+    }
+  };
+  let dismissed = isDismissed();
+  let bannerOn = false; // once the soft banner shows it stays until closed
+  const shown = new Set<string>(); // each prompt reports "shown" once per page load
 
   const h = <K extends keyof HTMLElementTagNameMap>(tag: K, props: Partial<HTMLElementTagNameMap[K]> = {}, ...kids: (Node | string)[]) => {
     const node = doc.createElement(tag);
@@ -22,6 +53,67 @@ export function mountChecklist(root: HTMLElement, data: RequirementsData, store:
     node.append(...kids);
     return node;
   };
+
+  function badges(where: string) {
+    const link = (href: string, store: string, src: string, alt: string, width: number) => {
+      const img = h('img', { src, alt, width, height: 40 });
+      const a = h('a', { href }, img);
+      a.dataset.store = store;
+      a.dataset.where = where;
+      a.addEventListener('click', () => track('upsell_click', { where, store }));
+      return a;
+    };
+    return h('p', { className: 'stores' },
+      link(APP_STORE_URL, 'app_store', '/badges/app-store.svg', LABELS.appStoreAlt, 120),
+      link(PLAY_URL, 'google_play', LABELS.playBadge, LABELS.playAlt, 135),
+    );
+  }
+
+  const reportShown = (where: string) => {
+    if (shown.has(where)) return;
+    shown.add(where);
+    track('upsell_shown', { where });
+  };
+
+  /** The belt-complete prompt wins over the soft banner; only one shows at a time. */
+  function renderUpsell(slot: HTMLElement, belt: { name: string }, pct: number) {
+    if (store.totalCompleted() >= UPSELL_THRESHOLD && !dismissed) bannerOn = true;
+    if (pct >= 100) {
+      const where = 'belt_complete';
+      const title = LABELS.completeTitle.replace('{belt}', belt.name);
+      reportShown(where);
+      slot.replaceChildren(
+        h('section', { className: 'upsell upsell-complete', ariaLabel: title },
+          h('h2', { textContent: title }),
+          h('p', { textContent: LABELS.completeBody }),
+          badges(where),
+          h('p', { className: 'upsell-note', textContent: LABELS.completeNote }),
+        ),
+      );
+    } else if (bannerOn && !dismissed) {
+      reportShown('banner');
+      const close = h('button', { type: 'button', className: 'upsell-close', textContent: '×' });
+      close.setAttribute('aria-label', LABELS.upsellClose);
+      close.addEventListener('click', () => {
+        dismissed = true;
+        bannerOn = false;
+        try {
+          prefs?.setItem(UPSELL_DISMISSED_KEY, '1');
+        } catch {}
+        slot.replaceChildren();
+      });
+      const section = h('section', { className: 'upsell upsell-banner' },
+        h('h2', { textContent: LABELS.upsellTitle }),
+        h('p', { textContent: LABELS.upsellBody }),
+        badges('banner'),
+        close,
+      );
+      section.setAttribute('aria-label', LABELS.upsellTitle);
+      slot.replaceChildren(section);
+    } else {
+      slot.replaceChildren();
+    }
+  }
 
   function render() {
     const belt = data.belts.find((b) => b.id === selected)!;
@@ -52,6 +144,10 @@ export function mountChecklist(root: HTMLElement, data: RequirementsData, store:
     };
     updateBar();
 
+    const upsellSlot = h('div', { className: 'upsell-slot', role: 'status' });
+    const refreshUpsell = () => renderUpsell(upsellSlot, belt, store.percent(belt.id, ids.length, ids));
+    refreshUpsell();
+
     const notice = h('p', { role: 'status', className: 'save-notice' });
     const refreshNotice = () => {
       notice.textContent = store.saveFailed() ? LABELS.saveFailed : '';
@@ -66,6 +162,7 @@ export function mountChecklist(root: HTMLElement, data: RequirementsData, store:
           store.toggle(belt.id, item.id);
           updateBar();
           refreshNotice();
+          refreshUpsell();
         });
         const note = h('textarea', { value: p.note, placeholder: LABELS.notePlaceholder, rows: 2 });
         note.addEventListener('input', () => {
@@ -95,7 +192,7 @@ export function mountChecklist(root: HTMLElement, data: RequirementsData, store:
       render();
     });
 
-    root.replaceChildren(tabs, bar, notice, ...sections, reset);
+    root.replaceChildren(tabs, bar, notice, upsellSlot, ...sections, reset);
   }
 
   render();
