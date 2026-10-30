@@ -18,6 +18,8 @@ build/
 ios/
 # Build artifacts
 build-*
+# ...but the static site's generator is source code
+!site/scripts/build-site.ts
 
 npm-debug.*
 *.p8
