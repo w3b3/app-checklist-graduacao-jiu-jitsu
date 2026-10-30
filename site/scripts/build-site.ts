@@ -51,6 +51,14 @@ export async function buildSite(outDir: string) {
     target: 'es2020',
     outfile: join(outDir, 'checklist/app.js'),
   });
+  await build({
+    entryPoints: [join(root, 'src/beacon-entry.ts')],
+    bundle: true,
+    minify: true,
+    format: 'iife',
+    target: 'es2020',
+    outfile: join(outDir, 'b.js'),
+  });
   cpSync(join(root, 'public'), outDir, { recursive: true });
 
   const layout = read('pages/layout.html');

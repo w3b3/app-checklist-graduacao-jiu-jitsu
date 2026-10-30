@@ -135,3 +135,131 @@ test('language is picked from the page lang, with Portuguese as the fallback', (
   assert.equal(stringsFor('').dataUrl, '/checklist/requirements.json');
   assert.match(stringsFor('en-US').loadFailed, /Could not load/);
 });
+
+// ---- App upsell ----
+
+import { UPSELL_DISMISSED_KEY } from '../src/checklist-ui.ts';
+
+function upsellSetup(opts: { initial?: Record<string, string>; prefs?: ReturnType<typeof memoryStorage>; lang?: string } = {}) {
+  const dom = new JSDOM('<!doctype html><main id="root"></main>');
+  const root = dom.window.document.getElementById('root')!;
+  const storage = memoryStorage(opts.initial);
+  const prefs = opts.prefs ?? memoryStorage();
+  const events: [string, Record<string, string> | undefined][] = [];
+  const names = opts.lang === 'en-US' ? JSON.parse(readFileSync(new URL('../content/en/requirement-names.json', import.meta.url), 'utf8')) : undefined;
+  mountChecklist(root, buildRequirementsData(names), createProgressStore(storage), {
+    confirm: () => true,
+    prefs,
+    labels: stringsFor(opts.lang ?? 'pt-BR'),
+    track: (e, p) => void events.push([e, p]),
+  });
+  const boxes = () => [...root.querySelectorAll<HTMLInputElement>('input[type=checkbox]')];
+  const banner = () => root.querySelector('.upsell-banner');
+  const complete = () => root.querySelector('.upsell-complete');
+  return { root, storage, prefs, events, boxes, banner, complete };
+}
+
+test('the soft banner appears exactly at the 5th tick, not before', () => {
+  const { boxes, banner, events } = upsellSetup();
+  for (let i = 0; i < 4; i++) boxes()[i].click();
+  assert.equal(banner(), null);
+  assert.deepEqual(events, []);
+  boxes()[4].click();
+  assert.ok(banner());
+  assert.deepEqual(events, [['upsell_shown', { where: 'banner' }]]);
+});
+
+test('the 5 ticks count across belts', () => {
+  const { root, boxes, banner } = upsellSetup();
+  for (let i = 0; i < 3; i++) boxes()[i].click();
+  [...root.querySelectorAll<HTMLButtonElement>('[role=tab]')].find((t) => t.textContent === 'Roxa')!.click();
+  boxes()[0].click();
+  assert.equal(banner(), null);
+  boxes()[1].click();
+  assert.ok(banner());
+});
+
+test('the banner is an accessible region with store badges and a focusable close button', () => {
+  const { boxes, banner } = upsellSetup();
+  for (let i = 0; i < 5; i++) boxes()[i].click();
+  const el = banner()!;
+  assert.equal(el.closest('[role=status]') !== null, true);
+  assert.ok(el.getAttribute('aria-label'));
+  const links = [...el.querySelectorAll<HTMLAnchorElement>('a[data-store]')];
+  assert.deepEqual(links.map((a) => [a.dataset.store, a.dataset.where]), [['app_store', 'banner'], ['google_play', 'banner']]);
+  assert.ok(links.every((a) => a.querySelector('img')!.alt));
+  const close = el.querySelector<HTMLButtonElement>('button.upsell-close')!;
+  assert.equal(close.type, 'button');
+  assert.ok(close.getAttribute('aria-label'));
+});
+
+test('dismissing hides the banner, stores the preference and survives a reload', () => {
+  const first = upsellSetup();
+  for (let i = 0; i < 5; i++) first.boxes()[i].click();
+  first.root.querySelector<HTMLButtonElement>('.upsell-close')!.click();
+  assert.equal(first.banner(), null);
+  assert.equal(first.prefs.data[UPSELL_DISMISSED_KEY], '1');
+  first.boxes()[5].click(); // more ticks do not bring it back
+  assert.equal(first.banner(), null);
+
+  const reloaded = upsellSetup({ initial: first.storage.data, prefs: first.prefs });
+  assert.equal(reloaded.banner(), null);
+  assert.deepEqual(reloaded.events, []);
+});
+
+test('the banner is shown again on reload if it was not dismissed', () => {
+  const first = upsellSetup();
+  for (let i = 0; i < 5; i++) first.boxes()[i].click();
+  const reloaded = upsellSetup({ initial: first.storage.data });
+  assert.ok(reloaded.banner());
+});
+
+test('clicking a badge reports upsell_click with its placement and store', () => {
+  const { root, boxes, events } = upsellSetup();
+  for (let i = 0; i < 5; i++) boxes()[i].click();
+  events.length = 0;
+  root.querySelector<HTMLAnchorElement>('a[data-store=google_play]')!.addEventListener('click', (e) => e.preventDefault());
+  root.querySelector<HTMLAnchorElement>('a[data-store=google_play]')!.click();
+  assert.deepEqual(events, [['upsell_click', { where: 'banner', store: 'google_play' }]]);
+});
+
+test('reaching 100% on a belt shows the stronger belt-complete prompt once', () => {
+  const { boxes, banner, complete, events } = upsellSetup();
+  const n = boxes().length;
+  for (let i = 0; i < n - 1; i++) boxes()[i].click();
+  assert.equal(complete(), null);
+  assert.ok(banner());
+  boxes()[n - 1].click();
+  assert.ok(complete());
+  assert.equal(banner(), null);
+  assert.match(complete()!.textContent!, /Faixa Azul completa/);
+  assert.match(complete()!.textContent!, /levar seu progresso para o app/);
+  assert.deepEqual([...complete()!.querySelectorAll<HTMLAnchorElement>('a[data-store]')].map((a) => a.dataset.where), ['belt_complete', 'belt_complete']);
+  assert.deepEqual(events.map((e) => e[1]!.where), ['banner', 'belt_complete']);
+  assert.equal(events.filter((e) => e[0] === 'upsell_shown').length, 2);
+});
+
+test('English copy for banner and belt-complete', () => {
+  const { boxes, banner, complete } = upsellSetup({ lang: 'en-US' });
+  for (let i = 0; i < 5; i++) boxes()[i].click();
+  assert.match(banner()!.textContent!, /works offline/);
+  assert.equal(banner()!.querySelector('img[src*=google-play-en]') !== null, true);
+  const n = boxes().length;
+  for (let i = 5; i < n; i++) boxes()[i].click();
+  assert.match(complete()!.textContent!, /Blue belt complete!/);
+});
+
+test('a throwing tracker or unusable preference storage never breaks the checklist', () => {
+  const dom = new JSDOM('<!doctype html><main id="root"></main>');
+  const root = dom.window.document.getElementById('root')!;
+  const broken = { getItem: () => { throw new Error('x'); }, setItem: () => { throw new Error('x'); } };
+  mountChecklist(root, data, createProgressStore(memoryStorage()), {
+    prefs: broken,
+    track: () => { throw new Error('boom'); },
+  });
+  const boxes = [...root.querySelectorAll<HTMLInputElement>('input[type=checkbox]')];
+  assert.doesNotThrow(() => boxes.slice(0, 5).forEach((b) => b.click()));
+  assert.ok(root.querySelector('.upsell-banner'));
+  assert.doesNotThrow(() => root.querySelector<HTMLButtonElement>('.upsell-close')!.click());
+  assert.equal(root.querySelector('.upsell-banner'), null);
+});

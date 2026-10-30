@@ -81,6 +81,9 @@ export function createProgressStore(storage: StorageLike) {
       save();
     },
     completedCount,
+    /** Ticked requirements across every belt. */
+    totalCompleted: () =>
+      Object.values(state).reduce((n, items) => n + Object.values(items).filter((p) => p.completed).length, 0),
     saveFailed: () => saveFailed,
     percent(belt: string, total: number, ids?: string[]) {
       return total === 0 ? 0 : Math.min(100, Math.round((completedCount(belt, ids) / total) * 100));
