@@ -40,9 +40,11 @@ jobs:
       - run: npm run build
       - name: Check the build is not empty
         run: |
-          test -s dist/styles.css
           test -s dist/checklist/index.html
-          test -s dist/checklist/app.js
+          ls dist/styles-*.css dist/checklist/app-*.js
+          test -s dist/404.html
+          test -s dist/sitemap.xml
+          test -s dist/robots.txt
           test -s dist/checklist/requirements.json
       - uses: actions/upload-artifact@v4
         with:
@@ -80,7 +82,11 @@ jobs:
       - name: Smoke test
         run: |
           set -euo pipefail
-          for path in /checklist/ /checklist/app.js /checklist/requirements.json /styles.css; do
+          # Fingerprinted asset names change every build, so read them from the live HTML.
+          html=$(curl -sf "$SITE_URL/checklist/?smoke=$GITHUB_RUN_ID")
+          css=$(echo "$html" | grep -o '/styles-[0-9a-f]*\.css' | head -1)
+          js=$(echo "$html" | grep -o '/checklist/app-[0-9a-f]*\.js' | head -1)
+          for path in /checklist/ "$js" /checklist/requirements.json "$css" /sitemap.xml /robots.txt /og-image-pt.png /og-image-en.png; do
             ok=""
             for i in 1 2 3 4 5; do
               code=$(curl -s -o /dev/null -w '%{http_code}' "$SITE_URL$path?smoke=$GITHUB_RUN_ID" || true)

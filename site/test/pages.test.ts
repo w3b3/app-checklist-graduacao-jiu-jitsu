@@ -95,7 +95,7 @@ for (const l of langs) {
   });
 
   test(`[${l.code}] checklist page loads the shared script`, () => {
-    assert.equal(sub('checklist/').querySelector('script')?.getAttribute('src'), '/checklist/app.js');
+    assert.match(sub('checklist/').querySelector('script[src]')?.getAttribute('src') ?? '', /^\/checklist\/app-[0-9a-f]{10}\.js$/);
     assert.ok(sub('checklist/').getElementById('checklist'));
   });
 }

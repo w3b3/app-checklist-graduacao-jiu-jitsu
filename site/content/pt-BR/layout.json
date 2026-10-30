@@ -16,5 +16,11 @@
   "navLabel": "Principal",
   "footerNavLabel": "Rodapé",
   "langLabel": "Idioma",
-  "ownersUrl": "https://tatame0.com/pt/?utm_source=graduacao&amp;utm_medium=site&amp;utm_campaign=owner_cta"
+  "ownersUrl": "https://tatame0.com/pt/?utm_source=graduacao&amp;utm_medium=site&amp;utm_campaign=owner_cta",
+  "ogLocale": "pt_BR",
+  "ogAlternateLocale": "en_US",
+  "ogSiteName": "Minha Próxima Faixa by tatame0",
+  "ogImage": "/og-image-pt.png",
+  "ogImageAlt": "Minha Próxima Faixa: checklist de graduação de Jiu-Jitsu com as faixas azul, roxa, marrom e preta",
+  "appName": "Minha Próxima Faixa by tatame0"
 }
