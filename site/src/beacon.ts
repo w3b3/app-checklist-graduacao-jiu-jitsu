@@ -33,7 +33,8 @@ export function createTracker(win: any, send: Send): Track {
     try {
       const q = new URLSearchParams({ e: clip(event, 30), path: clip(win.location.pathname, 200), lang: clip(win.document.documentElement.lang, 10) });
       for (const [k, v] of Object.entries(props)) if (clip(v)) q.set(k, clip(v));
-      send(`${EVENT_PATH}?${q}`);
+      // nginx logs the raw query string, so keep slashes readable (they are legal in a query).
+      send(`${EVENT_PATH}?${q.toString().replace(/%2F/gi, '/')}`);
     } catch {
       // Measuring must never break the page.
     }
