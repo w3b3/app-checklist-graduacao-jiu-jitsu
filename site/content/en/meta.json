@@ -1,6 +1,22 @@
 {
-  "index": {"title": "My Next Belt — Jiu-Jitsu belt promotion checklist", "description": "Track, belt by belt, the Jiu-Jitsu techniques you already know. 205 techniques, notes, video links, works offline and it is free."},
-  "checklist": {"title": "Jiu-Jitsu belt promotion checklist — My Next Belt", "description": "Check off the techniques you already know for blue, purple, brown and black belt. Your progress is saved on this device."},
-  "privacy": {"title": "Privacy — My Next Belt", "description": "Your data stays on your device. No account, no cookies and no third-party trackers."},
-  "support": {"title": "Support — My Next Belt", "description": "How to use the checklist, how your progress is saved and how to reach us."}
+  "index": {
+    "title": "BJJ belt requirements checklist | My Next Belt",
+    "description": "A free BJJ belt requirements checklist: 205 techniques for blue, purple, brown and black belt. Add notes and video links. Works offline.",
+    "crumb": "Home"
+  },
+  "checklist": {
+    "title": "BJJ techniques by belt: blue, purple, brown, black",
+    "description": "Check off the Brazilian Jiu-Jitsu techniques you already know for blue, purple, brown and black belt. Progress is saved on this device.",
+    "crumb": "Checklist"
+  },
+  "privacy": {
+    "title": "Privacy | My Next Belt",
+    "description": "Your data stays on your device. No account, no cookies and no third-party trackers.",
+    "crumb": "Privacy"
+  },
+  "support": {
+    "title": "Support and help | My Next Belt",
+    "description": "How to use the checklist, how your progress is saved and how to reach us.",
+    "crumb": "Support"
+  }
 }

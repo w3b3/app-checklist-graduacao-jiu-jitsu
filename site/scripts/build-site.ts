@@ -1,8 +1,10 @@
 import { build } from 'esbuild';
-import { mkdirSync, cpSync, rmSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
+import { mkdirSync, cpSync, rmSync, writeFileSync, readFileSync, existsSync, renameSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 import { buildRequirementsData, type NameTranslation } from './requirements-data.ts';
+import { buildHead, buildRobots, buildSitemap, breadcrumbList, softwareApplication, webSite, type Alternate } from './seo.ts';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -39,6 +41,18 @@ function fill(template: string, values: Record<string, string>): string {
 
 const read = (...p: string[]) => readFileSync(join(root, ...p), 'utf8');
 
+/** Short content hash used to fingerprint assets, e.g. styles-1a2b3c4d5e.css */
+const hashOf = (content: string | Buffer) => createHash('sha256').update(content).digest('hex').slice(0, 10);
+
+/** Renames outDir/<name>.<ext> to <name>-<hash>.<ext> and returns the site-relative URL. */
+function fingerprint(outDir: string, rel: string): string {
+  const abs = join(outDir, rel);
+  const dot = rel.lastIndexOf('.');
+  const hashed = `${rel.slice(0, dot)}-${hashOf(readFileSync(abs))}${rel.slice(dot)}`;
+  renameSync(abs, join(outDir, hashed));
+  return '/' + hashed;
+}
+
 export async function buildSite(outDir: string) {
   rmSync(outDir, { recursive: true, force: true });
   mkdirSync(join(outDir, 'checklist'), { recursive: true });
@@ -52,6 +66,11 @@ export async function buildSite(outDir: string) {
     outfile: join(outDir, 'checklist/app.js'),
   });
   cpSync(join(root, 'public'), outDir, { recursive: true });
+  // Content-hashed names: a changed file gets a new URL, so no cache can serve it stale.
+  const stylesHref = fingerprint(outDir, 'styles.css');
+  const appJs = fingerprint(outDir, 'checklist/app.js');
+  const lastmod = new Date().toISOString().slice(0, 10);
+  const sitemapEntries: { url: string; alternates: Alternate[] }[] = [];
 
   const layout = read('pages/layout.html');
   const heroSize = JSON.parse(read('content/hero-checklist.json'));
@@ -72,12 +91,12 @@ export async function buildSite(outDir: string) {
     );
 
     for (const page of pages) {
-      const alternates = [
+      const alternates: Alternate[] = [
         ...languages.map((l) => ({ hreflang: l.code, url: SITE_ORIGIN + pageUrl(l, page.slug) })),
         { hreflang: 'x-default', url: SITE_ORIGIN + pageUrl(languages[0], page.slug) },
-      ]
-        .map((a) => `  <link rel="alternate" hreflang="${a.hreflang}" href="${a.url}">`)
-        .join('\n');
+      ];
+      const canonical = SITE_ORIGIN + pageUrl(lang, page.slug);
+      sitemapEntries.push({ url: canonical, alternates });
       const langSwitch =
         `      <span class="lang-switch" role="group" aria-label="${strings.langLabel}">` +
         languages
@@ -93,14 +112,44 @@ export async function buildSite(outDir: string) {
         heroH: String(heroSize.height),
         prefix,
         ownersUrl: strings.ownersUrl,
+        appJs,
       });
       const html = fill(layout, {
         ...strings,
         ...meta[page.name],
         mainClass: page.mainClass,
         body,
-        canonical: SITE_ORIGIN + pageUrl(lang, page.slug),
-        alternates,
+        stylesHref,
+        seoHead: buildHead({
+          origin: SITE_ORIGIN,
+          title: meta[page.name].title,
+          description: meta[page.name].description,
+          canonical,
+          alternates,
+          ogLocale: strings.ogLocale,
+          ogAlternateLocales: languages.filter((l) => l.code !== lang.code).map(() => strings.ogAlternateLocale),
+          siteName: strings.ogSiteName,
+          imageUrl: SITE_ORIGIN + strings.ogImage,
+          imageAlt: strings.ogImageAlt,
+          jsonLd:
+            page.name === 'index'
+              ? [
+                  softwareApplication({
+                    name: strings.appName,
+                    url: canonical,
+                    inLanguage: lang.code,
+                    description: meta[page.name].description,
+                    image: SITE_ORIGIN + strings.ogImage,
+                  }),
+                  webSite({ name: strings.appName, url: canonical, inLanguage: lang.code }),
+                ]
+              : [
+                  breadcrumbList([
+                    { name: strings.brand, url: SITE_ORIGIN + pageUrl(lang, '') },
+                    { name: meta[page.name].crumb, url: canonical },
+                  ]),
+                ],
+        }),
         langSwitch,
         homeHref: pageUrl(lang, ''),
         checklistHref: pageUrl(lang, 'checklist/'),
@@ -112,4 +161,28 @@ export async function buildSite(outDir: string) {
       writeFileSync(target, html);
     }
   }
+
+  // Friendly bilingual 404 (nginx serves it with a real 404 status), kept out of the index.
+  const pt = JSON.parse(read('content', 'pt-BR', 'layout.json'));
+  const notFound = fill(layout, {
+    ...pt,
+    title: 'Página não encontrada | Page not found',
+    description: 'Página não encontrada. Page not found.',
+    mainClass: 'prose',
+    body: read('content', '404.html'),
+    stylesHref,
+    seoHead: buildHead({
+      origin: SITE_ORIGIN, title: '', description: '', canonical: '', alternates: [], ogLocale: '',
+      ogAlternateLocales: [], siteName: '', imageUrl: '', imageAlt: '', jsonLd: [], noindex: true,
+    }),
+    langSwitch: '',
+    homeHref: '/',
+    checklistHref: '/checklist/',
+    privacyHref: '/privacy/',
+    supportHref: '/support/',
+  });
+  writeFileSync(join(outDir, '404.html'), notFound);
+
+  writeFileSync(join(outDir, 'sitemap.xml'), buildSitemap(sitemapEntries, lastmod));
+  writeFileSync(join(outDir, 'robots.txt'), buildRobots(SITE_ORIGIN));
 }

@@ -15,5 +15,11 @@
   "footerSupport": "Support",
   "footerChecklist": "Checklist",
   "footerBy": "Made by tatame0",
-  "ownersUrl": "https://tatame0.com/?utm_source=graduacao&amp;utm_medium=site&amp;utm_campaign=owner_cta"
+  "ownersUrl": "https://tatame0.com/?utm_source=graduacao&amp;utm_medium=site&amp;utm_campaign=owner_cta",
+  "ogLocale": "en_US",
+  "ogAlternateLocale": "pt_BR",
+  "ogSiteName": "My Next Belt by tatame0",
+  "ogImage": "/og-image-en.png",
+  "ogImageAlt": "My Next Belt: Jiu-Jitsu belt requirements checklist for blue, purple, brown and black belt",
+  "appName": "My Next Belt by tatame0"
 }
