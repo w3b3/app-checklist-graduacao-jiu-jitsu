@@ -9,8 +9,8 @@ import { buildSite } from '../scripts/build-site.ts';
 const ORIGIN = 'https://graduacao.tatame0.com';
 const slugs = ['', 'checklist/', 'privacy/', 'support/'];
 const langs = [
-  { code: 'pt-BR', prefix: '', switchLabel: 'EN', ownersUrl: 'https://tatame0.com/pt/?utm_source=graduacao&utm_medium=site&utm_campaign=owner_cta', byUrl: 'https://tatame0.com/pt/', noCookies: /Não usamos cookies/ },
-  { code: 'en-US', prefix: '/en', switchLabel: 'PT', ownersUrl: 'https://tatame0.com/?utm_source=graduacao&utm_medium=site&utm_campaign=owner_cta', byUrl: 'https://tatame0.com/', noCookies: /We don't use cookies/ },
+  { code: 'pt-BR', prefix: '', switchLabel: 'EN', ownersUrl: 'https://tatame0.com/pt/?utm_source=graduacao&utm_medium=site&utm_campaign=owner_cta', byUrl: 'https://tatame0.com/pt/?utm_source=graduacao&utm_medium=site&utm_campaign=header', noCookies: /Não usamos cookies/ },
+  { code: 'en-US', prefix: '/en', switchLabel: 'PT', ownersUrl: 'https://tatame0.com/?utm_source=graduacao&utm_medium=site&utm_campaign=owner_cta', byUrl: 'https://tatame0.com/?utm_source=graduacao&utm_medium=site&utm_campaign=header', noCookies: /We don't use cookies/ },
 ];
 const urlOf = (prefix: string, slug: string) => `${prefix}/${slug}`;
 const fileOf = (url: string) => (url.endsWith('/') ? url + 'index.html' : url).slice(1);
@@ -80,6 +80,26 @@ for (const l of langs) {
     assert.ok(hrefs.includes(l.ownersUrl));
     assert.ok(hrefs.includes(l.byUrl));
     for (const img of docs[home].querySelectorAll('img')) assert.ok(img.getAttribute('alt'));
+  });
+
+  test(`[${l.code}] every link to tatame0.com carries utm tags, and header and footer are told apart`, () => {
+    for (const url of urls) {
+      const toTatame0 = [...docs[url].querySelectorAll('a[href]')].filter((a) => {
+        const u = new URL(a.getAttribute('href')!, ORIGIN);
+        return u.hostname === 'tatame0.com';
+      });
+      assert.ok(toTatame0.length >= 2, `${url} has header and footer links to tatame0.com`);
+      for (const a of toTatame0) {
+        const q = new URL(a.getAttribute('href')!).searchParams;
+        assert.equal(q.get('utm_source'), 'graduacao', `${url} ${a.outerHTML}`);
+        assert.equal(q.get('utm_medium'), 'site', `${url} ${a.outerHTML}`);
+        assert.ok(q.get('utm_campaign'), `${url} ${a.outerHTML}`);
+      }
+      const campaign = (sel: string) =>
+        new URL(docs[url].querySelector(sel)!.getAttribute('href')!).searchParams.get('utm_campaign');
+      assert.equal(campaign('.site-header a.by'), 'header', url);
+      assert.equal(campaign('.site-footer a[href*="tatame0.com"]:not([href*="owner_cta"])'), 'footer', url);
+    }
   });
 
   test(`[${l.code}] every page shares the site header and footer links`, () => {
