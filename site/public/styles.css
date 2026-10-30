@@ -66,7 +66,7 @@ details textarea, details input { display: block; width: 100%; margin-top: 0.4re
 .site-nav { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; align-items: center; }
 .site-nav a { color: var(--t-on-ink); font: 700 0.72rem var(--t-font-mono); text-transform: uppercase; letter-spacing: 0.14em; text-decoration: none; }
 .site-nav a:hover { color: var(--t-on-ink-dim); text-decoration: underline; }
-.site-nav .by { color: var(--t-accent); }
+.site-nav .by { color: #ff6b73; }
 .site-header :focus-visible, .site-footer :focus-visible, .card.ink :focus-visible { outline-color: var(--t-on-ink); }
 .site-footer { background: var(--t-ink); color: var(--t-on-ink); padding: 2rem 1.25rem; border-top: 4px solid var(--t-accent); }
 .site-footer p { margin: 0 0 0.8rem; color: var(--t-on-ink-dim); }

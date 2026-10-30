@@ -183,3 +183,13 @@ test('404 page exists, is noindex, and has no canonical or social tags', () => {
   assert.match(d.querySelector('link[rel=stylesheet][href^="/styles-"]')!.getAttribute('href')!, /^\/styles-[0-9a-f]{10}\.css$/);
   assert.ok(readdirSync(out).includes('404.html'));
 });
+
+test('favicon and touch icon are declared and shipped (no 404 in the browser console)', () => {
+  for (const rel of ['index.html', '404.html']) {
+    const d = dom(rel);
+    for (const sel of ['link[rel=icon]', 'link[rel=apple-touch-icon]']) {
+      assert.ok(existsSync(join(out, d.querySelector(sel)!.getAttribute('href')!)), `${rel} ${sel}`);
+    }
+  }
+  assert.ok(existsSync(join(out, 'favicon.ico')));
+});
