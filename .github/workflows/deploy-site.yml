@@ -1,0 +1,93 @@
+name: Deploy site
+
+# Builds site/ and publishes it to https://graduacao.tatame0.com (nginx on rv415).
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - ".github/workflows/deploy-site.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-site
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  SITE_URL: https://graduacao.tatame0.com
+  LIVE_LINK: /home/ds/sites/graduacao.tatame0.com
+  RELEASES_DIR: /home/ds/sites-releases/graduacao
+
+jobs:
+  build:
+    name: Test and build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - name: Check the build is not empty
+        run: |
+          test -s dist/styles.css
+          test -s dist/checklist/index.html
+          test -s dist/checklist/app.js
+          test -s dist/checklist/requirements.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-dist
+          path: site/dist
+          if-no-files-found: error
+          retention-days: 7
+
+  deploy:
+    name: Deploy to rv415
+    needs: build
+    runs-on: [self-hosted, graduacao]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: site-dist
+          path: dist
+
+      - name: Publish release (atomic symlink swap)
+        run: |
+          set -euo pipefail
+          release="$RELEASES_DIR/${GITHUB_SHA::12}-$GITHUB_RUN_ID"
+          mkdir -p "$RELEASES_DIR"
+          rm -rf "$release"
+          cp -R dist "$release"
+          find "$release" -type d -exec chmod 755 {} +
+          find "$release" -type f -exec chmod 644 {} +
+          # Swap the live symlink in one step so visitors never see half-copied files.
+          ln -sfn "$release" "$LIVE_LINK.new"
+          mv -T "$LIVE_LINK.new" "$LIVE_LINK"
+          echo "Live release: $release"
+          # Keep the 10 newest releases for rollback.
+          ls -1dt "$RELEASES_DIR"/*/ | tail -n +11 | xargs -r rm -rf
+
+      - name: Smoke test
+        run: |
+          set -euo pipefail
+          for path in /checklist/ /checklist/app.js /checklist/requirements.json /styles.css; do
+            ok=""
+            for i in 1 2 3 4 5; do
+              code=$(curl -s -o /dev/null -w '%{http_code}' "$SITE_URL$path?smoke=$GITHUB_RUN_ID" || true)
+              if [ "$code" = "200" ]; then ok=1; break; fi
+              sleep 3
+            done
+            echo "$path -> $code"
+            [ -n "$ok" ] || { echo "Smoke test failed for $path"; exit 1; }
+          done
+          curl -sf "$SITE_URL/checklist/requirements.json?smoke=$GITHUB_RUN_ID" | python3 -c 'import json,sys; json.load(sys.stdin)'
