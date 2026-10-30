@@ -107,3 +107,8 @@ main.prose li { margin-bottom: 0.4rem; }
 main.prose a { color: var(--t-accent-deep); }
 .updated { font: 700 0.75rem var(--t-font-mono); text-transform: uppercase; letter-spacing: 0.1em; color: var(--t-muted); }
 .hero > * { min-width: 0; }
+
+/* Language switch (PT | EN) */
+.lang-switch { display: inline-flex; gap: 0.35rem; align-items: center; font: 700 0.72rem var(--t-font-mono); letter-spacing: 0.14em; color: var(--t-on-ink-dim); }
+.site-nav .lang-switch a { text-decoration: underline; }
+.lang-switch [aria-current] { color: var(--t-on-ink); border-bottom: 2px solid var(--t-accent); }

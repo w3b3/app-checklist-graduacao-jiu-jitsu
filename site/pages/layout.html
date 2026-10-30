@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{title}}</title>
   <meta name="description" content="{{description}}">
+  <link rel="canonical" href="{{canonical}}">
+{{alternates}}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Space+Mono:wght@400;700&family=Archivo:wght@400;600;800&display=swap">
@@ -12,11 +14,12 @@
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="/">{{brand}}</a>
-    <nav class="site-nav" aria-label="Principal">
-      <a href="/checklist/">{{navChecklist}}</a>
-      <a href="/support/">{{navSupport}}</a>
+    <a class="brand" href="{{homeHref}}">{{brand}}</a>
+    <nav class="site-nav" aria-label="{{navLabel}}">
+      <a href="{{checklistHref}}">{{navChecklist}}</a>
+      <a href="{{supportHref}}">{{navSupport}}</a>
       <a class="by" href="{{tatame0Url}}">{{byTatame0}}</a>
+{{langSwitch}}
     </nav>
   </header>
   <main class="{{mainClass}}">
@@ -24,11 +27,11 @@
   </main>
   <footer class="site-footer">
     <p>{{footerLine}}</p>
-    <nav aria-label="Rodapé">
-      <a href="/checklist/">{{footerChecklist}}</a>
-      <a href="/privacy/">{{footerPrivacy}}</a>
-      <a href="/support/">{{footerSupport}}</a>
-      <a href="https://tatame0.com/pt/?utm_source=graduacao&amp;utm_medium=site&amp;utm_campaign=owner_cta">{{footerOwners}}</a>
+    <nav aria-label="{{footerNavLabel}}">
+      <a href="{{checklistHref}}">{{footerChecklist}}</a>
+      <a href="{{privacyHref}}">{{footerPrivacy}}</a>
+      <a href="{{supportHref}}">{{footerSupport}}</a>
+      <a href="{{ownersUrl}}">{{footerOwners}}</a>
       <a href="{{tatame0Url}}">{{footerBy}}</a>
     </nav>
   </footer>

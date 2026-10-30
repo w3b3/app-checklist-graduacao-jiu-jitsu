@@ -5,6 +5,8 @@ import { buildRequirementsData } from '../scripts/requirements-data.ts';
 import { createProgressStore, STORAGE_KEY } from '../src/progress-store.ts';
 import { mountChecklist } from '../src/checklist-ui.ts';
 import { memoryStorage } from './memory-storage.ts';
+import { stringsFor } from '../src/i18n.ts';
+import { readFileSync } from 'node:fs';
 
 const data = buildRequirementsData();
 
@@ -94,4 +96,42 @@ test('warns when the browser refuses to save, and stays quiet otherwise', () => 
   failing = false;
   root.querySelectorAll<HTMLInputElement>('input[type=checkbox]')[1].click();
   assert.equal(notice().textContent, '');
+});
+
+test('English: tabs, labels, shared storage key and ids, and the save warning', () => {
+  const names = JSON.parse(readFileSync(new URL('../content/en/requirement-names.json', import.meta.url), 'utf8'));
+  const en = buildRequirementsData(names);
+  const dom = new JSDOM('<!doctype html><main id="root"></main>');
+  const root = dom.window.document.getElementById('root')!;
+  const storage = memoryStorage();
+  mountChecklist(root, en, createProgressStore(storage), { confirm: () => true, labels: stringsFor('en-US') });
+
+  assert.deepEqual([...root.querySelectorAll('[role=tab]')].map((t) => t.textContent), ['Blue', 'Purple', 'Brown', 'Black']);
+  assert.equal(root.querySelector('[role=progressbar]')!.getAttribute('aria-label'), 'Progress');
+  assert.equal(root.querySelector('h2')!.textContent, 'Takedowns');
+  assert.equal(root.querySelector('summary')!.textContent, 'Note and link');
+  assert.equal(root.querySelector('textarea')!.placeholder, 'Your note');
+  assert.equal(root.querySelector('[data-action=reset]')!.textContent, 'Reset this belt');
+  assert.equal(root.querySelectorAll('input[type=checkbox]').length, 49);
+
+  root.querySelector<HTMLInputElement>('input[type=checkbox]')!.click();
+  // Same key and same id as the Portuguese page, so progress carries over between languages.
+  assert.equal(JSON.parse(storage.data[STORAGE_KEY]).azul['azul-quedas-1'].completed, true);
+});
+
+test('English: the save failure notice is in English', () => {
+  const dom = new JSDOM('<!doctype html><main id="root"></main>');
+  const root = dom.window.document.getElementById('root')!;
+  const failing = { getItem: () => null, setItem: () => { throw new Error('quota'); } };
+  mountChecklist(root, data, createProgressStore(failing), { labels: stringsFor('en-US') });
+  root.querySelector<HTMLInputElement>('input[type=checkbox]')!.click();
+  assert.match(root.querySelector('[role=status]')!.textContent!, /could not save/i);
+});
+
+test('language is picked from the page lang, with Portuguese as the fallback', () => {
+  assert.equal(stringsFor('en-US').dataUrl, '/en/checklist/requirements.json');
+  assert.equal(stringsFor('en').dataUrl, '/en/checklist/requirements.json');
+  assert.equal(stringsFor('pt-BR').dataUrl, '/checklist/requirements.json');
+  assert.equal(stringsFor('').dataUrl, '/checklist/requirements.json');
+  assert.match(stringsFor('en-US').loadFailed, /Could not load/);
 });

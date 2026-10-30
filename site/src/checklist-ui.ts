@@ -1,24 +1,18 @@
-import type { RequirementsData } from '../scripts/requirements-data.ts';
+import type { RequirementsData } from './types.ts';
+import { stringsFor, type Strings } from './i18n.ts';
 import type { createProgressStore } from './progress-store.ts';
 
 type Store = ReturnType<typeof createProgressStore>;
 
 export interface ChecklistOptions {
   confirm?: (message: string) => boolean;
+  /** UI text. Defaults to Portuguese. */
+  labels?: Strings;
 }
-
-const LABELS = {
-  progress: 'Progresso',
-  noteAndLink: 'Nota e link',
-  notePlaceholder: 'Sua anotação',
-  linkPlaceholder: 'Link de vídeo (YouTube, etc.)',
-  saveFailed: 'Não foi possível salvar neste navegador. Seu progresso pode se perder ao recarregar.',
-  reset: 'Zerar esta faixa',
-  resetConfirm: 'Zerar todo o progresso desta faixa?',
-};
 
 export function mountChecklist(root: HTMLElement, data: RequirementsData, store: Store, opts: ChecklistOptions = {}) {
   const doc = root.ownerDocument;
+  const LABELS = opts.labels ?? stringsFor('pt-BR');
   const confirmReset = opts.confirm ?? ((m: string) => globalThis.confirm(m));
   let selected = data.belts[0].id;
 
