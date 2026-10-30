@@ -1,0 +1,58 @@
+/* Tatame0 "Technical Blueprint" — Tatame Red theme. Tokens mirror tatame0/design-system. */
+:root {
+  --t-paper: #ffffff;
+  --t-canvas: #faf7f7;
+  --t-ink: #0a0a0a;
+  --t-muted: #6b6b6b;
+  --t-accent: #e5121f;
+  --t-accent-deep: #a60a14;
+  --t-accent-tint: #fdeaea;
+  --t-accent-grid: #f0e4e4;
+  --t-font-display: 'Big Shoulders Display', 'Arial Narrow', Impact, sans-serif;
+  --t-font-mono: 'Space Mono', ui-monospace, monospace;
+  --t-font-body: 'Archivo', system-ui, sans-serif;
+}
+* { box-sizing: border-box; border-radius: 0; }
+body {
+  margin: 0;
+  background-color: var(--t-paper);
+  background-image:
+    linear-gradient(var(--t-accent-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--t-accent-grid) 1px, transparent 1px);
+  background-size: 44px 44px;
+  color: var(--t-ink);
+  font-family: var(--t-font-body);
+  line-height: 1.5;
+}
+.site-header {
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  padding: 0.9rem 1.25rem; background: var(--t-ink); color: #fff;
+}
+.brand { font: 900 1.4rem/1 var(--t-font-display); text-transform: uppercase; color: #fff; text-decoration: none; }
+.by { font: 700 0.75rem var(--t-font-mono); color: #b9b9b9; text-decoration: none; text-transform: uppercase; letter-spacing: 0.08em; }
+main { max-width: 760px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+h1 { font: 900 clamp(2.4rem, 8vw, 3.6rem)/0.92 var(--t-font-display); text-transform: uppercase; letter-spacing: -0.01em; margin: 0 0 0.5rem; }
+.lede { color: var(--t-muted); margin: 0 0 1.5rem; }
+.belt-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+.belt-tab {
+  flex: 1 1 5rem; padding: 0.7rem 1rem; cursor: pointer;
+  font: 800 1.1rem var(--t-font-display); text-transform: uppercase;
+  background: var(--t-paper); color: var(--t-ink); border: 2.5px solid var(--t-ink);
+}
+.belt-tab[aria-selected='true'] { background: var(--t-accent); color: #fff; box-shadow: 4px 4px 0 var(--t-ink); }
+.progress { position: relative; height: 2rem; border: 2.5px solid var(--t-ink); background: var(--t-paper); margin-bottom: 1.5rem; }
+.progress-fill { position: absolute; inset: 0 auto 0 0; background: var(--t-accent); transition: width 0.25s; }
+.progress-label { position: relative; display: block; padding: 0 0.6rem; font: 700 0.85rem/1.8rem var(--t-font-mono); mix-blend-mode: difference; color: #fff; }
+.category { background: var(--t-paper); border: 2.5px solid var(--t-ink); margin-bottom: 1.25rem; box-shadow: 4px 4px 0 var(--t-ink); }
+.category h2 { margin: 0; padding: 0.6rem 1rem; font: 800 1.4rem var(--t-font-display); text-transform: uppercase; background: var(--t-accent-tint); border-bottom: 2.5px solid var(--t-ink); }
+.requirements { list-style: none; margin: 0; padding: 0; }
+.requirements li { padding: 0.65rem 1rem; border-bottom: 1px solid var(--t-accent-grid); }
+.requirements li:last-child { border-bottom: 0; }
+.requirements label { display: flex; gap: 0.6rem; align-items: center; cursor: pointer; font-weight: 600; }
+.requirements input[type='checkbox'] { width: 1.3rem; height: 1.3rem; accent-color: var(--t-accent); flex: none; }
+details { margin: 0.4rem 0 0 1.9rem; }
+summary { cursor: pointer; font: 700 0.7rem var(--t-font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--t-muted); }
+details textarea, details input { display: block; width: 100%; margin-top: 0.4rem; padding: 0.5rem; font: inherit; border: 2px solid var(--t-ink); }
+.reset { margin-top: 0.5rem; padding: 0.6rem 1rem; font: 800 1rem var(--t-font-display); text-transform: uppercase; background: var(--t-paper); border: 2.5px solid var(--t-ink); cursor: pointer; }
+.reset:hover { background: var(--t-accent-tint); }
+:focus-visible { outline: 3px solid var(--t-accent-deep); outline-offset: 2px; }
