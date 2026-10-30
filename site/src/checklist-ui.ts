@@ -12,6 +12,7 @@ const LABELS = {
   noteAndLink: 'Nota e link',
   notePlaceholder: 'Sua anotação',
   linkPlaceholder: 'Link de vídeo (YouTube, etc.)',
+  saveFailed: 'Não foi possível salvar neste navegador. Seu progresso pode se perder ao recarregar.',
   reset: 'Zerar esta faixa',
   resetConfirm: 'Zerar todo o progresso desta faixa?',
 };
@@ -57,6 +58,11 @@ export function mountChecklist(root: HTMLElement, data: RequirementsData, store:
     };
     updateBar();
 
+    const notice = h('p', { role: 'status', className: 'save-notice' });
+    const refreshNotice = () => {
+      notice.textContent = store.saveFailed() ? LABELS.saveFailed : '';
+    };
+
     const sections = belt.categories.map((cat) => {
       const list = h('ul', { className: 'requirements' });
       for (const item of cat.items) {
@@ -65,11 +71,18 @@ export function mountChecklist(root: HTMLElement, data: RequirementsData, store:
         box.addEventListener('change', () => {
           store.toggle(belt.id, item.id);
           updateBar();
+          refreshNotice();
         });
         const note = h('textarea', { value: p.note, placeholder: LABELS.notePlaceholder, rows: 2 });
-        note.addEventListener('input', () => store.setNote(belt.id, item.id, note.value));
+        note.addEventListener('input', () => {
+          store.setNote(belt.id, item.id, note.value);
+          refreshNotice();
+        });
         const link = h('input', { type: 'url', value: p.mediaUrl, placeholder: LABELS.linkPlaceholder });
-        link.addEventListener('input', () => store.setMediaUrl(belt.id, item.id, link.value));
+        link.addEventListener('input', () => {
+          store.setMediaUrl(belt.id, item.id, link.value);
+          refreshNotice();
+        });
         list.append(
           h('li', {},
             h('label', {}, box, ' ', item.name),
@@ -88,7 +101,7 @@ export function mountChecklist(root: HTMLElement, data: RequirementsData, store:
       render();
     });
 
-    root.replaceChildren(tabs, bar, ...sections, reset);
+    root.replaceChildren(tabs, bar, notice, ...sections, reset);
   }
 
   render();
